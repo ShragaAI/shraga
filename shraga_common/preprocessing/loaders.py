@@ -6,7 +6,7 @@ from typing import List
 
 logger = logging.getLogger(__name__)
 
-#TODO
+#TODO improve this
 PACKAGE_BASE_PATH = Path(__file__).parent.parent.parent
 
 flow_classes = []
