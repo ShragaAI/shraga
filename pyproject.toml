@@ -2,7 +2,7 @@
 name = "shraga-common"
 version = "0.1.0"
 description = ""
-authors = ["lizozom <liza.katz@bigdataboutique.com>"]
+authors = ["Itamar Syn-Hershko <itamar@bigdataboutique.com>", "lizozom <liza.katz@bigdataboutique.com>", "Felipe Carvalho <felipe@bigdataboutique.com>"]
 readme = "README.md"
 packages = [{include = "shraga_common"}]
 
@@ -21,7 +21,7 @@ langchain = "^0.2.12"
 pandas = "^2.2.2"
 openai = "1.57.4"
 snowflake-connector-python = "^3.11.0"
-elasticsearch = "^8.14.0"
+elasticsearch = "^8.14.0"elasticsearch
 geopandas = "^1.0.1"
 googlemaps = "^4.10.0"
 vertexai = "^1.60.0"
