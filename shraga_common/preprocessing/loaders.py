@@ -29,7 +29,7 @@ def load_flow_modules(paths: List[str]):
         base_path = Path(base_path).resolve()
 
         if not base_path.exists():
-            logger.error(f"⚠️ Path does not exist: {base_path}")
+            logger.warn(f"⚠️ Path does not exist: {base_path}")
             continue
         
         if str(base_path) not in sys.path:

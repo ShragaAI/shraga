@@ -10,7 +10,7 @@ from shraga_common.logging import (get_config_info, get_platform_info,
                                    get_user_agent_info)
 from shraga_common.models import FlowResponse, FlowStats
 
-from ..config import shraga_config
+from ..config import get_config
 from ..models import Chat, ChatMessage, FeedbackRequest, FlowRunApiRequest
 from .get_history_client import get_history_client
 
@@ -21,6 +21,7 @@ async def get_history(
     user_id: Optional[str], start: Optional[str] = None, end: Optional[str] = None
 ) -> List[Chat]:
     try:
+        shraga_config = get_config()
         client, index = get_history_client(shraga_config)
         if not client:
             return []
@@ -74,6 +75,7 @@ async def get_history(
 
 
 async def get_chat(chat_id: str) -> Optional[Chat]:
+    shraga_config = get_config()
     client, index = get_history_client(shraga_config)
     if not client:
         return None
@@ -89,6 +91,7 @@ async def get_chat(chat_id: str) -> Optional[Chat]:
 
 
 async def delete_chat(chat_id: str) -> bool:
+    shraga_config = get_config()
     client, index = get_history_client(shraga_config)
     if not client:
         return True
@@ -103,6 +106,7 @@ async def delete_chat(chat_id: str) -> bool:
 
 async def log_interaction(msg_type: str, request: Request, context: dict):
     try:
+        shraga_config = get_config()
         client, index = get_history_client(shraga_config)
         if not client:
             return

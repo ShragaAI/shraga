@@ -4,13 +4,15 @@ from shraga_common.embedders import BedrockEmbedder
 from shraga_common.retrievers import (ElasticsearchRetriever,
                                       OpenSearchRetriever)
 
-from ..config import shraga_config
+from ..config import get_config
+
 
 router = APIRouter()
 
 
 @router.get("/")
 async def list_services() -> dict:
+    shraga_config = get_config()
     d = dict()
     try:
         embedder = BedrockEmbedder(shraga_config)

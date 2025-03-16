@@ -6,7 +6,8 @@ import requests
 from starlette.authentication import (AuthCredentials, AuthenticationBackend,
                                       AuthenticationError, SimpleUser)
 
-from ..config import shraga_config
+from ..config import get_config
+
 
 
 class BasicAuthBackend(AuthenticationBackend):
@@ -28,6 +29,7 @@ class BasicAuthBackend(AuthenticationBackend):
 
         username, _, password = decoded.partition(":")
         username = username.lower().strip()
+        shraga_config = get_config()
         if not (
             username in shraga_config.auth_users()
             and f"{username}:{password}" in shraga_config.auth_realms().get("basic")
@@ -39,6 +41,7 @@ class BasicAuthBackend(AuthenticationBackend):
 
 class JWTAuthBackend(AuthenticationBackend):
     async def authenticate(self, conn):
+        shraga_config = get_config()
         if "user" in conn and conn.user.is_authenticated:
             return AuthCredentials(["authenticated"]), conn.user
 

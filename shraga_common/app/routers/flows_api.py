@@ -7,7 +7,7 @@ from fastapi.responses import JSONResponse
 
 from shraga_common.models import FlowBase, FlowResponse
 
-from ..config import shraga_config
+from ..config import get_config
 from ..exceptions import RequestCancelledException
 from ..models import FlowRunApiRequest
 from ..routers.request_utils import execute_cancellable_flow
@@ -17,16 +17,21 @@ from ..utils import clean_input
 router = APIRouter()
 
 logger = logging.getLogger(__name__)
+flows = {}
+available_flows = {}
 
-flows = list_flows_service.get_flows(shraga_config)
-available_flows = list_flows_service.get_available_flows(shraga_config)
-
+def load_flows():
+    global flows, available_flows
+    shraga_config = get_config()
+    flows = list_flows_service.get_flows(shraga_config)
+    available_flows = list_flows_service.get_available_flows(shraga_config)
 
 @router.get("/")
 async def get_flows_list(full: Optional[bool] = True) -> List[dict]:
+    shraga_config = get_config()
     routes = []
-    list_flows = shraga_config.get("ui.list_flows")
-    default_flow = shraga_config.get("ui.default_flow")
+    list_flows = get_config("ui.list_flows")
+    default_flow = get_config("ui.default_flow")
 
     if list_flows:
         for k, v in flows.items():
@@ -65,7 +70,7 @@ async def get_flows_list(full: Optional[bool] = True) -> List[dict]:
 
 @router.get("/{flow_id}/preferences")
 async def get_flow_preferences(flow_id: str) -> dict:
-    if shraga_config.get("ui.list_flows") is not True:
+    if get_config("ui.list_flows") is not True:
         raise HTTPException(status_code=404)
 
     f = flows.get(flow_id)
@@ -82,8 +87,7 @@ async def run_flow(
     bg_tasks: BackgroundTasks,
     keep: bool = True,
 ) -> FlowResponse:
-
-    max_length = shraga_config.get("flows.input_max_length", 1000)
+    max_length = get_config("flows.input_max_length", 1000)
     if len(req_body.question) > max_length:
         return JSONResponse(
             status_code=400,
@@ -99,6 +103,8 @@ async def run_flow(
         raise HTTPException(
             status_code=400, detail="Unknown flow id: " + req_body.flow_id
         )
+        
+    shraga_config = get_config()
     flow: FlowBase = f(shraga_config, flows=available_flows)
 
     if keep:

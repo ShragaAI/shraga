@@ -10,13 +10,19 @@ from starlette.middleware.gzip import GZipMiddleware
 
 from shraga_common.logging import get_git_commit
 
-from ..config import get_config, shraga_config
+from ..config import get_config, load_config
 from ..middlewares import logging_middleware
-from .api_app import api_app
-from .oauth_app import oauth_app
+from .api_app import api_app, load_api_app
+from .flows_api import load_flows
+from .oauth_app import load_oauth_app, oauth_app
 
 
-def setup_app():
+def setup_app(config_path: str) -> FastAPI:
+    shraga_config = load_config(config_path)
+    load_flows()
+    load_api_app()
+    load_oauth_app()
+    
     if not shraga_config:
         exit(1)
 

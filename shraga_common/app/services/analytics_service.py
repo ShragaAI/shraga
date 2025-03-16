@@ -3,7 +3,7 @@ import logging
 from opensearchpy import NotFoundError
 from pydash import _
 
-from ..config import get_config, shraga_config
+from ..config import get_config
 from ..models import AnalyticsRequest
 from .get_history_client import get_history_client
 
@@ -26,6 +26,7 @@ async def get_step_stats(filters, steps) -> list:
         return dict()
 
     try:
+        shraga_config = get_config()
         client, index = get_history_client(shraga_config)
         if not client:
             return dict()
@@ -76,6 +77,7 @@ async def get_step_stats(filters, steps) -> list:
 
 async def get_analytics(request: AnalyticsRequest) -> dict:
     try:
+        shraga_config = get_config()
         client, index = get_history_client(shraga_config)
         if not client:
             return dict()

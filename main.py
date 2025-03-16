@@ -4,7 +4,8 @@ import uvicorn
 
 from shraga_common.app import get_config, setup_app
 
-app = setup_app()
+config_path = os.getenv("CONFIG_PATH", "config.demo.yaml")
+app = setup_app(config_path)
 
 if __name__ == "__main__":
 
