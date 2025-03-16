@@ -1,0 +1,2 @@
+class ShragaException(Exception):
+    pass
