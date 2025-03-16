@@ -1,0 +1,51 @@
+server:
+  port: 8000
+
+ui:
+  enabled: true
+  name: Shraga
+  title: Shraga
+  default_flow: demo
+  list_flows: true
+  loading_messages:
+    - Looking up relevant information
+    - Compiling analysis and sources
+    - Generating answer
+
+retrievers:
+  elasticsearch:
+    type: elasticsearch
+    use_cloud_id: ${ELASTICSEARCH_USE_CLOUD_ID} # true or false
+    cloud_id: ${ELASTICSEARCH_CLOUD_ID} # when use_cloud_id
+    host: ${ELASTICSEARCH_HOST} # when not use_cloud_id
+    port: ${ELASTICSEARCH_PORT} # when not use_cloud_id
+    use_ssl: ${ELASTICSEARCH_USE_SSL}
+    verify_certs: ${ELASTICSEARCH_VERIFY_CERTS}
+    auth_type: ${ELASTICSEARCH_AUTH_TYPE} # basic or apikey
+    user: ${ELASTICSEARCH_USER} # when auth_type is basic
+    password: ${ELASTICSEARCH_PASSWORD} # when auth_type is basic
+    api_key: ${ELASTICSEARCH_API_KEY} # when auth_type is apikey
+    index: ${ELASTICSEARCH_INDEX}
+
+auth:
+  users:
+    - user@domain.com
+  realms:
+    basic:
+      - user@domain.com:secretpwd
+    jwt:
+      secret: foobar
+    google:  
+      client_id: ${GOOGLE_CLIENT_ID}
+      client_secret: ${GOOGLE_CLIENT_SECRET}
+    microsoft:  
+      client_id: ${MICROSOFT_CLIENT_ID}
+      client_secret: ${MICROSOFT_CLIENT_SECRET}
+
+history:
+  mode: enabled
+  analytics:
+    users:
+      - user@domain.com
+    domains:
+      - bigdataboutique.com
