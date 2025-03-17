@@ -38,6 +38,9 @@ To run the app use:
 ```bash
 SHRAGA_FLOWS_PATH=flows CONFIG_PATH=config.demo.yaml uvicorn main:app --reload
 
+cd frontend
+pnpm run dev
+
 ```
 
 ## demo flow
