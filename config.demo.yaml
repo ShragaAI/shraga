@@ -43,7 +43,7 @@ auth:
       client_secret: ${MICROSOFT_CLIENT_SECRET}
 
 history:
-  mode: enabled
+  enabled: false
   analytics:
     users:
       - user@domain.com

@@ -1,0 +1,6 @@
+{
+  "sideEffects": false,
+  "module": "./index.js",
+  "main": "../node/ChartsAxisHighlight/index.js",
+  "types": "./index.d.ts"
+}

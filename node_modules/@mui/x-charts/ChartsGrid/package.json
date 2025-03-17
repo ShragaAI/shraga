@@ -1,0 +1,6 @@
+{
+  "sideEffects": false,
+  "module": "./index.js",
+  "main": "../node/ChartsGrid/index.js",
+  "types": "./index.d.ts"
+}

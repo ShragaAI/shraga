@@ -1,0 +1,94 @@
+'use client';
+
+import _extends from "@babel/runtime/helpers/esm/extends";
+import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
+const _excluded = ["highlighted", "faded"];
+import * as React from 'react';
+import PropTypes from 'prop-types';
+import useControlled from '@mui/utils/useControlled';
+import { HighlightedContext } from "./HighlightedContext.js";
+import { createIsFaded } from "./createIsFaded.js";
+import { createIsHighlighted } from "./createIsHighlighted.js";
+import { useSeries } from "../../hooks/useSeries.js";
+import { jsx as _jsx } from "react/jsx-runtime";
+const mergeDeprecatedOptions = options => {
+  const _ref = options ?? {},
+    {
+      highlighted,
+      faded
+    } = _ref,
+    other = _objectWithoutPropertiesLoose(_ref, _excluded);
+  return _extends({
+    highlight: highlighted,
+    fade: faded
+  }, other);
+};
+function HighlightedProvider({
+  children,
+  highlightedItem: highlightedItemProps,
+  onHighlightChange
+}) {
+  const [highlightedItem, setHighlightedItem] = useControlled({
+    controlled: highlightedItemProps,
+    default: null,
+    name: 'HighlightedProvider',
+    state: 'highlightedItem'
+  });
+  const series = useSeries();
+  const seriesById = React.useMemo(() => {
+    const map = new Map();
+    Object.keys(series).forEach(seriesType => {
+      const seriesData = series[seriesType];
+      Object.keys(seriesData?.series ?? {}).forEach(seriesId => {
+        const seriesItem = seriesData?.series[seriesId];
+        map.set(seriesId, mergeDeprecatedOptions(seriesItem?.highlightScope));
+      });
+    });
+    return map;
+  }, [series]);
+  const highlightScope = highlightedItem && highlightedItem.seriesId ? seriesById.get(highlightedItem.seriesId) ?? undefined : undefined;
+  const providerValue = React.useMemo(() => {
+    return {
+      isInitialized: true,
+      data: {
+        highlightScope,
+        highlightedItem,
+        setHighlighted: itemData => {
+          setHighlightedItem(itemData);
+          onHighlightChange?.(itemData);
+        },
+        clearHighlighted: () => {
+          setHighlightedItem(null);
+          onHighlightChange?.(null);
+        },
+        isHighlighted: createIsHighlighted(highlightScope, highlightedItem),
+        isFaded: createIsFaded(highlightScope, highlightedItem)
+      }
+    };
+  }, [highlightedItem, highlightScope, setHighlightedItem, onHighlightChange]);
+  return /*#__PURE__*/_jsx(HighlightedContext.Provider, {
+    value: providerValue,
+    children: children
+  });
+}
+process.env.NODE_ENV !== "production" ? HighlightedProvider.propTypes = {
+  // ----------------------------- Warning --------------------------------
+  // | These PropTypes are generated from the TypeScript type definitions |
+  // | To update them edit the TypeScript types and run "pnpm proptypes"  |
+  // ----------------------------------------------------------------------
+  children: PropTypes.node,
+  /**
+   * The item currently highlighted. Turns highlighting into a controlled prop.
+   */
+  highlightedItem: PropTypes.shape({
+    dataIndex: PropTypes.number,
+    seriesId: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
+  }),
+  /**
+   * The callback fired when the highlighted item changes.
+   *
+   * @param {HighlightItemData | null} highlightedItem  The newly highlighted item.
+   */
+  onHighlightChange: PropTypes.func
+} : void 0;
+export { HighlightedProvider };

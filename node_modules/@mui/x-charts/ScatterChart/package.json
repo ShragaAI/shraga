@@ -1,0 +1,6 @@
+{
+  "sideEffects": false,
+  "module": "./index.js",
+  "main": "../node/ScatterChart/index.js",
+  "types": "./index.d.ts"
+}
