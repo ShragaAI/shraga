@@ -182,6 +182,7 @@ class EvaluationFlow(FlowBase):
 
         self.trace(f"Evaluating {len(results)} scenarios")
         correct_count = 0
+        no_answer_count = 0
         partial_correct_count = 0
         average_run_time = 0
         found_key_doc_id = 0
@@ -233,6 +234,9 @@ class EvaluationFlow(FlowBase):
                         correct_count += 1
                     elif correctness == "partially correct":
                         partial_correct_count += 1
+                    if result["evaluation"].get("no_answer"):
+                        no_answer_count += 1
+                        result["evaluation"]["correctness"] = "no answer"
 
                     if result["evaluation"].get("error"):
                         err_count += 1
@@ -263,6 +267,7 @@ class EvaluationFlow(FlowBase):
                 "no_key_doc_id": no_key_doc_id,
                 "not_found_key_doc_id": len(results) - found_key_doc_id - no_key_doc_id,
                 "correct_count": correct_count,
+                "no_answer_count": no_answer_count,
                 "partial_correct_count": partial_correct_count,
                 "correct_percentage": round(correct_count / len(results) * 100),
                 "partial_correct_percentage": round(
