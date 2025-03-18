@@ -193,7 +193,7 @@ class EvaluationFlow(FlowBase):
         lock = asyncio.Lock()
 
         async def evaluate_single_result(result):
-            nonlocal correct_count, partial_correct_count, average_run_time, found_key_doc_id, no_key_doc_id
+            nonlocal correct_count, no_answer_count, partial_correct_count, average_run_time, found_key_doc_id, no_key_doc_id
 
             if not result:
                 self.trace("No result to evaluate")
