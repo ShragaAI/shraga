@@ -141,6 +141,7 @@ class EvaluationFlow(FlowBase):
             scenario_answer, scenario
         )
         missing_doc_id = contains_key_doc_id is None
+        no_answer = answer.startswith("I'm sorry")
 
         self.trace(f"---\nAnswer: {answer}\n---")
         return {
@@ -149,6 +150,7 @@ class EvaluationFlow(FlowBase):
             "evaluation": {
                 "missing_doc_id": missing_doc_id,
                 "contains_key_doc_id": contains_key_doc_id,
+                "no_answer": no_answer,
                 "run_time": run_time.seconds,
             },
             "metadata": {
