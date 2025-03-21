@@ -7,6 +7,5 @@ resource "aws_s3_object" "object" {
   key    = "config.yaml"
   source = var.config_file_path
 
-  # from Terraform 0.11.12 and later
   etag = filemd5(var.config_file_path)
 }

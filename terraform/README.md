@@ -1,17 +1,15 @@
 ### Deploying Shraga
 
-Import the common module in your terraform.
+Import the `ecs` module in your terraform.
 Extend the configuration if needed.
 
 ```
-
-module "common" {
-  source            = "git::https://github.com/ShragaAI/shraga.git//terraform/common?ref=main"
-
+module "ecs" {
+  source     = "git::https://github.com/ShragaAI/shraga.git//terraform/ecs?ref=main"
 }
 ```
 
-### To deploy the new image:
+### To deploy a new image:
 
 1. Go to ECS -> shraga cluster -> shraga service
 2. Click on "Update" button

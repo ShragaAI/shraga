@@ -24,7 +24,6 @@ resource "aws_alb_target_group" "shraga_alb_tg" {
   }
 }
 
-# TODO: Do we need http ? lets enforce https always 
 resource "aws_alb_listener" "http" {
   load_balancer_arn = aws_alb.shraga_alb.id
   port              = 80
@@ -37,7 +36,7 @@ resource "aws_alb_listener" "http" {
 }
 
 data "aws_acm_certificate" "cert" {
-  domain   = var.elb_cert_domain
+  domain   = var.alb_cert_domain
   statuses = ["ISSUED"]
 }
 
