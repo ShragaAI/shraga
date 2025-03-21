@@ -101,7 +101,7 @@ resource "aws_ecs_task_definition" "shraga_app" {
   depends_on = [aws_s3_object.object]
 }
 
-/* resource "aws_ecs_service" "shraga_srv" {
+resource "aws_ecs_service" "shraga_srv" {
   name            = "shraga-srv"
   cluster         = aws_ecs_cluster.shraga_cluster.id
   task_definition = aws_ecs_task_definition.shraga_app.arn
@@ -122,4 +122,4 @@ resource "aws_ecs_task_definition" "shraga_app" {
     container_name   = "shraga-app"
     container_port   = 8000
   }
-} */
+}
