@@ -111,8 +111,7 @@ resource "aws_ecs_service" "shraga_srv" {
   force_new_deployment = true
 
   network_configuration {
-    subnets = var.ecs_subnets_ids
-    # TODO : reomve in prod, workround for pub subnet vpc settup 
+    subnets          = var.ecs_subnets_ids
     assign_public_ip = false
     security_groups  = [aws_security_group.shraga_ecs_tasks.id]
   }
