@@ -19,10 +19,10 @@ resource "aws_ecs_task_definition" "shraga_app" {
   family                   = "shraga-app-task"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  cpu                      = "1024"
-  memory                   = "2048"
+  cpu                      = var.task_cpu
+  memory                   = var.task_memory
   execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
-  task_role_arn            = aws_iam_role.ecs_task_role.arn
+  task_role_arn            = var.ecs_task_role_arn
   volume {
     name      = "conf-vol"
     host_path = ""
@@ -31,7 +31,7 @@ resource "aws_ecs_task_definition" "shraga_app" {
   container_definitions = jsonencode([
     {
       name  = "shraga-app"
-      image = "${aws_ecr_repository.shraga_repo.repository_url}:${var.shraga_tag}"
+      image = "${aws_ecr_repository.shraga_repo.repository_url}:latest"
       environment = [
         {
           name  = "CONFIG_PATH"
@@ -66,7 +66,7 @@ resource "aws_ecs_task_definition" "shraga_app" {
     },
     {
       name      = "shraga-init"
-      image     = "${aws_ecr_repository.shraga_init_repo.repository_url}:${var.shraga_tag}"
+      image     = "${aws_ecr_repository.shraga_init_repo.repository_url}:latest"
       essential = false
       environment = [
         {
