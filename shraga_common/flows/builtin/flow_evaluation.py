@@ -382,6 +382,10 @@ class EvaluationFlow(FlowBase):
         timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
         fname = f"{preferences.flow_id}-{timestamp}-eval.yaml"
         output_file = os.path.join(os.getcwd(), "output", fname)
+        
+        # ensure folder exists
+        os.makedirs(os.path.dirname(output_file), exist_ok=True)
+        
         self.output_file_raw_results = os.path.join(
             os.getcwd(), "output", "raw-" + fname
         )
