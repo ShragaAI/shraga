@@ -9,6 +9,9 @@ def get_client(shraga_config: ShragaConfig):
     opensearch_config = shraga_config.get("retrievers.opensearch")
     elasticsearch_config = shraga_config.get("retrievers.elasticsearch")
     config: RetrieverConfig = opensearch_config or elasticsearch_config
+    if not config:
+        return None
+    
     RetrieverClass = (
         OpenSearchRetriever if opensearch_config else ElasticsearchRetriever
     )

@@ -280,6 +280,9 @@ class EvaluationFlow(FlowBase):
         return data
 
     def log_eval_result(self, result: dict, preferences: EvaluationModel):
+        if not self.es_client:
+            return
+        
         testcase = result.get("testcase", {})
         response_answer = result.get("generated_answer", None)
 
