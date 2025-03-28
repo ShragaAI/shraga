@@ -280,6 +280,9 @@ class EvaluationFlow(FlowBase):
         return data
 
     def log_eval_result(self, result: dict, preferences: EvaluationModel):
+        if not self.es_client:
+            return
+        
         testcase = result.get("testcase", {})
         response_answer = result.get("generated_answer", None)
 
@@ -379,6 +382,10 @@ class EvaluationFlow(FlowBase):
         timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
         fname = f"{preferences.flow_id}-{timestamp}-eval.yaml"
         output_file = os.path.join(os.getcwd(), "output", fname)
+        
+        # ensure folder exists
+        os.makedirs(os.path.dirname(output_file), exist_ok=True)
+        
         self.output_file_raw_results = os.path.join(
             os.getcwd(), "output", "raw-" + fname
         )

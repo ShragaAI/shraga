@@ -22,4 +22,4 @@ class EvaluationModel(BaseModel):
 class EvaluationScenario(BaseModel):
     question: str
     answer: Optional[str] = None
-    metadata: Dict
+    metadata: Optional[Dict] = None
