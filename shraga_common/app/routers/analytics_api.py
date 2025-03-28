@@ -17,4 +17,4 @@ async def get_analytics(r: AnalyticsRequest) -> dict:
 async def get_chat_history(
     start: Optional[str] = Query(None), end: Optional[str] = Query(None)
 ) -> List[Chat]:
-    return await history_service.get_history(None, start, end)
+    return await history_service.get_history(None, start, end, True)
