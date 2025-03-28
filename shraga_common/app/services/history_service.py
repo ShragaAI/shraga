@@ -18,7 +18,10 @@ logger = logging.getLogger(__name__)
 
 
 async def get_history(
-    user_id: Optional[str], start: Optional[str] = None, end: Optional[str] = None
+    user_id: Optional[str], 
+    start: Optional[str] = None, 
+    end: Optional[str] = None,
+    exclude_debug: Optional[bool] = False
 ) -> List[Chat]:
     try:
         shraga_config = get_config()
@@ -34,35 +37,45 @@ async def get_history(
                 {"range": {"timestamp": {"gte": start, "lte": end or "now"}}}
             )
 
+        bool_query = {
+            "must": [{"terms": {"msg_type": ["system", "user"]}}],
+            "filter": filters,
+        }
+
+        if exclude_debug:
+            bool_query["must_not"] = [
+                {"term": {"config.debug.enabled": True}},
+                {"term": {"config.debug.enabled": False}},
+            ]
+
+        query = {
+            "query": {
+                "bool": bool_query
+            },
+            "size": 0,
+            "aggs": {
+                "by_chat": {
+                    "terms": {
+                        "field": "chat_id",
+                        "size": 10,
+                        "order": {"first_message": "desc"},
+                    },
+                    "aggs": {
+                        "latest": {
+                            "top_hits": {
+                                "size": 100,
+                                "sort": [{"timestamp": {"order": "desc"}}],
+                            }
+                        },
+                        "first_message": {"min": {"field": "timestamp"}},
+                    },
+                }
+            },
+        }
+
         response = client.search(
             index=index,
-            body={
-                "query": {
-                    "bool": {
-                        "must": [{"terms": {"msg_type": ["system", "user"]}}],
-                        "filter": filters,
-                    }
-                },
-                "size": 0,
-                "aggs": {
-                    "by_chat": {
-                        "terms": {
-                            "field": "chat_id",
-                            "size": 10,
-                            "order": {"first_message": "desc"},
-                        },
-                        "aggs": {
-                            "latest": {
-                                "top_hits": {
-                                    "size": 100,
-                                    "sort": [{"timestamp": {"order": "desc"}}],
-                                }
-                            },
-                            "first_message": {"min": {"field": "timestamp"}},
-                        },
-                    }
-                },
-            },
+            body=query,
         )
         hits = _.get(response, "aggregations.by_chat.buckets") or []
         return [Chat.from_hit(hit) for hit in hits]
