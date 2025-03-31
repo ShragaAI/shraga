@@ -54,7 +54,7 @@ resource "aws_alb_listener" "https" {
   port              = 443
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08"
-  certificate_arn   = data.aws_acm_certificate.cert.arn
+  certificate_arn   = data.aws_acm_certificate.cert[0].arn
   default_action {
     target_group_arn = aws_alb_target_group.shraga_alb_tg[0].id
     type             = "forward"
