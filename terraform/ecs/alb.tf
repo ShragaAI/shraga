@@ -32,12 +32,12 @@ resource "aws_alb_target_group" "shraga_alb_tg" {
 
 resource "aws_alb_listener" "http" {
   count             = local.should_create_alb ? 1 : 0
-  load_balancer_arn = aws_alb.shraga_alb.id
+  load_balancer_arn = aws_alb[0].shraga_alb.id
   port              = 80
   protocol          = "HTTP"
 
   default_action {
-    target_group_arn = aws_alb_target_group.shraga_alb_tg.id
+    target_group_arn = aws_alb_target_group[0].shraga_alb_tg.id
     type             = "forward"
   }
 }
@@ -50,13 +50,13 @@ data "aws_acm_certificate" "cert" {
 
 resource "aws_alb_listener" "https" {
   count             = local.should_create_alb ? 1 : 0
-  load_balancer_arn = aws_alb.shraga_alb.id
+  load_balancer_arn = aws_alb[0].shraga_alb.id
   port              = 443
   protocol          = "HTTPS"
   ssl_policy        = "ELBSecurityPolicy-2016-08"
   certificate_arn   = data.aws_acm_certificate.cert.arn
   default_action {
-    target_group_arn = aws_alb_target_group.shraga_alb_tg.id
+    target_group_arn = aws_alb_target_group[0].shraga_alb_tg.id
     type             = "forward"
   }
 }
