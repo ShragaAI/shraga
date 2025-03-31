@@ -1,4 +1,9 @@
+locals {
+  should_create_alb = var.alb_tg_arn == null && (var.alb_subnets_ids != null && var.alb_cert_domain != null) ? true : false
+}
+
 resource "aws_alb" "shraga_alb" {
+  count           = local.should_create_alb ? 1 : 0
   name            = "shraga-load-balancer"
   internal        = var.alb_public == true ? false : true
   subnets         = var.alb_subnets_ids
@@ -7,6 +12,7 @@ resource "aws_alb" "shraga_alb" {
 }
 
 resource "aws_alb_target_group" "shraga_alb_tg" {
+  count       = local.should_create_alb ? 1 : 0
   name        = "shraga-alb-target-group"
   port        = 8000
   protocol    = "HTTP"
@@ -25,6 +31,7 @@ resource "aws_alb_target_group" "shraga_alb_tg" {
 }
 
 resource "aws_alb_listener" "http" {
+  count             = local.should_create_alb ? 1 : 0
   load_balancer_arn = aws_alb.shraga_alb.id
   port              = 80
   protocol          = "HTTP"
@@ -36,11 +43,13 @@ resource "aws_alb_listener" "http" {
 }
 
 data "aws_acm_certificate" "cert" {
+  count    = local.should_create_alb ? 1 : 0
   domain   = var.alb_cert_domain
   statuses = ["ISSUED"]
 }
 
 resource "aws_alb_listener" "https" {
+  count             = local.should_create_alb ? 1 : 0
   load_balancer_arn = aws_alb.shraga_alb.id
   port              = 443
   protocol          = "HTTPS"
