@@ -117,7 +117,7 @@ resource "aws_ecs_service" "shraga_srv" {
   }
 
   load_balancer {
-    target_group_arn = aws_alb_target_group.shraga_alb_tg.arn
+    target_group_arn = local.should_create_alb ? aws_alb_target_group.shraga_alb_tg[0].arn : var.alb_tg_arn
     container_name   = "shraga-app"
     container_port   = 8000
   }
