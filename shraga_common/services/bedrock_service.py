@@ -32,6 +32,7 @@ BEDROCK_CHAT_MODEL_IDS: BedrockChatModelId = {
     # cross region routing
     "haiku_3_5": "us.anthropic.claude-3-5-haiku-20241022-v1:0",
     "sonnet_3_5_v2": "us.anthropic.claude-3-5-sonnet-20241022-v2:0",
+    "sonnet_3_7": "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
 }
 
 
