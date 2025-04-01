@@ -1,4 +1,5 @@
 import logging
+import os
 
 from opensearchpy import NotFoundError
 from pydash import _
@@ -61,7 +62,10 @@ async def get_analytics(request: AnalyticsRequest) -> dict:
                 }
             )
 
-        flow_stats_query = {
+        if os.environ.get("PROD", "").lower() == "true":
+            filters.append({"term": {"prod_env": True}})
+
+        daily_stats_query = {
             "size": 0,
             "query": {
                 "bool": {
@@ -69,40 +73,119 @@ async def get_analytics(request: AnalyticsRequest) -> dict:
                 }
             },
             "aggs": {
-                "latency_percentiles": {
-                    "percentiles": {
-                        "field": "stats.latency",
-                        "percents": [50, 75, 95, 99, 99.9],
-                    }
-                },
-                "input_tokens_percentiles": {
-                    "percentiles": {
-                        "field": "stats.input_tokens",
-                        "percents": [50, 75, 95, 99, 99.9],
-                    }
-                },
-                "output_tokens_percentiles": {
-                    "percentiles": {
-                        "field": "stats.output_tokens",
-                        "percents": [50, 75, 95, 99, 99.9],
-                    }
-                },
-                "time_took_percentiles": {
-                    "percentiles": {
-                        "field": "stats.time_took",
-                        "percents": [50, 75, 95, 99, 99.9],
+                "daily": {
+                    "date_histogram": {
+                        "field": "timestamp",
+                        "calendar_interval": "day",
+                        "format": "yyyy-MM-dd",
+                    },
+                    "aggs": {
+                        "latency_percentiles": {
+                            "percentiles": {
+                                "field": "stats.latency",
+                                "percents": [50, 90, 99],
+                            }
+                        },
+                        "input_tokens_percentiles": {
+                            "percentiles": {
+                                "field": "stats.input_tokens",
+                                "percents": [50, 90, 99],
+                            }
+                        },
+                        "output_tokens_percentiles": {
+                            "percentiles": {
+                                "field": "stats.output_tokens",
+                                "percents": [50, 90, 99],
+                            }
+                        },
+                        "time_took_percentiles": {
+                            "percentiles": {
+                                "field": "stats.time_took",
+                                "percents": [50, 90, 99],
+                            }
+                        }
                     }
                 }
             }
         }
+
+        usage_stats_query = {
+            "size": 0,
+            "query": {
+                "bool": {
+                    "filter": filters
+                }
+            },
+            "aggs": {
+                "total_chats": {
+                    "cardinality": {
+                        "field": "chat_id"
+                    }
+                },
+                "total_users": {
+                    "cardinality": {
+                        "field": "user_id"
+                    }
+                },
+                "user_messages": {
+                    "filter": {
+                        "term": {
+                            "msg_type": "user"
+                        }
+                    },
+                    "aggs": {
+                        "count": {
+                            "value_count": {
+                                "field": "_id"
+                            }
+                        }
+                    }
+                },
+                "assistant_messages": {
+                    "filter": {
+                        "term": {
+                            "msg_type": "system"
+                        }
+                    },
+                    "aggs": {
+                        "count": {
+                            "value_count": {
+                                "field": "_id"
+                            }
+                        }
+                    }
+                } 
+            }
+        }
+
+        daily_stats_response = client.search(index=index, body=daily_stats_query)
+        usage_stats_response = client.search(index=index, body=usage_stats_query)
+
+        daily_stats = []
+        for bucket in _.get(daily_stats_response, "aggregations.daily.buckets", []):
+            daily_stats.append({
+                "date": bucket["key_as_string"],
+                "latency": _.get(bucket, "latency_percentiles.values", {}),
+                "input_tokens": _.get(bucket, "input_tokens_percentiles.values", {}),
+                "output_tokens": _.get(bucket, "output_tokens_percentiles.values", {}), 
+                "time_took": _.get(bucket, "time_took_percentiles.values", {}),
+            })
         
-        flow_stats_response = client.search(index=index, body=flow_stats_query)
+        user_messages = _.get(usage_stats_response, "aggregations.user_messages.count.value", 0)
+        assistant_messages = _.get(usage_stats_response, "aggregations.assistant_messages.count.value", 0)
+
+        user_stats = {
+            "total_chats": _.get(usage_stats_response, "aggregations.total_chats.value", 0),
+            "total_users": _.get(usage_stats_response, "aggregations.total_users.value", 0),
+            "total_messages": {
+                "user": user_messages,
+                "assistant": assistant_messages
+            }
+        }
         
         return {
-            "latency": _.get(flow_stats_response, "aggregations.latency_percentiles.values", {}),
-            "input_tokens": _.get(flow_stats_response, "aggregations.input_tokens_percentiles.values", {}),
-            "output_tokens": _.get(flow_stats_response, "aggregations.output_tokens_percentiles.values", {}),
-            "time_took": _.get(flow_stats_response, "aggregations.time_took_percentiles.values", {}),
+            "daily": daily_stats,
+            "overall": user_stats
         }
     
     except NotFoundError:
