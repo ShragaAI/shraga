@@ -103,7 +103,7 @@ class GoogleMapsRetriever:
         self, loc_a: str, loc_b: str, n_routes: int
     ) -> List[dict]:
         "Given two locations (as strings), return the routes between them."
-        directions_result = self.gmaps.directions(loc_a, loc_b, alternatives=True)
+        directions_result = self.gmaps.directions(loc_a, loc_b, alternatives=True, units="metric")
         return directions_result[:n_routes]
 
     def get_locations_along_route(
