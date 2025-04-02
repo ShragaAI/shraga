@@ -20,11 +20,18 @@ logger = logging.getLogger(__name__)
 flows = {}
 available_flows = {}
 
-def load_flows():
+def register_flows(flow_class: list[FlowBase]):
     global flows, available_flows
     shraga_config = get_config()
+    for flow in flow_class:
+        if not issubclass(flow, FlowBase):
+            raise TypeError(
+                f"Flow class {flow.__name__} must be a subclass of FlowBase"
+            )
+        list_flows_service.register_flow(flow)
     flows = list_flows_service.get_flows(shraga_config)
     available_flows = list_flows_service.get_available_flows(shraga_config)
+    
 
 @router.get("/")
 async def get_flows_list(full: Optional[bool] = True) -> List[dict]:

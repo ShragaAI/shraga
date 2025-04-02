@@ -9,17 +9,18 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.middleware.gzip import GZipMiddleware
 
 from shraga_common.logging import get_git_commit
+from shraga_common.models import FlowBase
 
 from ..config import get_config, load_config
 from ..middlewares import logging_middleware
 from .api_app import api_app, load_api_app
-from .flows_api import load_flows
+from .flows_api import register_flows
 from .oauth_app import load_oauth_app, oauth_app
 
 
-def setup_app(config_path: str) -> FastAPI:
+def setup_app(config_path: str, flows: List[FlowBase]) -> FastAPI:
     shraga_config = load_config(config_path)
-    load_flows()
+    register_flows(flows)
     load_api_app()
     load_oauth_app()
     
