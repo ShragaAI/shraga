@@ -1,5 +1,5 @@
 locals {
-  should_create_alb = var.alb_tg_arn == null && (var.alb_subnets_ids != null && var.alb_cert_domain != null) ? true : false
+  should_create_alb = var.alb_tg_arn == null ? true : false
 }
 
 resource "aws_alb" "shraga_alb" {
