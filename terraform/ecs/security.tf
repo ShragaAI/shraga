@@ -3,6 +3,7 @@ data "aws_vpc" "selected" {
 }
 
 resource "aws_security_group" "shraga_alb" {
+  count       = local.should_create_alb ? 1 : 0
   name        = "shraga-alb-security-group"
   description = "Controls access to the ALB"
   vpc_id      = var.vpc_id
