@@ -7,7 +7,7 @@ resource "aws_alb" "shraga_alb" {
   name            = "shraga-load-balancer"
   internal        = var.alb_public == true ? false : true
   subnets         = var.alb_subnets_ids
-  security_groups = [aws_security_group.shraga_alb.id]
+  security_groups = [aws_security_group.shraga_alb[0].id]
   idle_timeout    = 4000
 }
 
