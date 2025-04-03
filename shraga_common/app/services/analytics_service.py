@@ -1,15 +1,14 @@
 import logging
-import os
 
 from opensearchpy import NotFoundError
 from pydash import _
 
+from ..utils import is_prod_env
 from ..config import get_config
 from ..models import AnalyticsRequest
 from .get_history_client import get_history_client
 
 logger = logging.getLogger(__name__)
-
 
 def is_analytics_authorized(email: str):
     if not get_config("history.analytics") or not email or "@" not in email:
@@ -62,8 +61,8 @@ async def get_analytics(request: AnalyticsRequest) -> dict:
                 }
             )
 
-        if os.environ.get("PROD", "").lower() == "true":
-            filters.append({"term": {"prod_env": True}})
+        if is_prod_env():
+            filters.append({"term": {"config.prod": True}})
 
         daily_stats_query = {
             "size": 0,
