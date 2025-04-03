@@ -39,7 +39,7 @@ resource "aws_security_group" "shraga_ecs_tasks" {
     from_port       = 8000
     to_port         = 8000
     protocol        = "tcp"
-    security_groups = [local.should_create_alb ? aws_security_group.shraga_alb[0].id : var.var.alb_sg_id]
+    security_groups = [local.should_create_alb ? aws_security_group.shraga_alb[0].id : var.alb_sg_id]
   }
 
   egress {
