@@ -45,5 +45,6 @@ ipykernel = "^6.29.5"
 selenium = "^4.27.1"
 chromedriver-binary = "130.0.6723.116"
 pylint = "^3.3.4"
+python-dotenv = "^1.1.0"
 
 

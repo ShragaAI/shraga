@@ -10,6 +10,7 @@ from shraga_common.logging import (get_config_info, get_platform_info,
                                    get_user_agent_info)
 from shraga_common.models import FlowResponse, FlowStats
 
+from ..utils import is_prod_env
 from ..config import get_config
 from ..models import Chat, ChatMessage, FeedbackRequest, FlowRunApiRequest
 from .get_history_client import get_history_client
@@ -37,16 +38,13 @@ async def get_history(
                 {"range": {"timestamp": {"gte": start, "lte": end or "now"}}}
             )
 
+        if is_prod_env() and not user_id:
+            filters.append({"term": {"config.prod": True}})
+
         bool_query = {
             "must": [{"terms": {"msg_type": ["system", "user"]}}],
             "filter": filters,
         }
-
-        if exclude_debug:
-            bool_query["must_not"] = [
-                {"term": {"config.debug.enabled": True}},
-                {"term": {"config.debug.enabled": False}},
-            ]
 
         query = {
             "query": {

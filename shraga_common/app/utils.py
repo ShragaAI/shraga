@@ -1,6 +1,14 @@
+import os
 import re
+import importlib.util
 from typing import Optional
 
+if importlib.util.find_spec("dotenv") is not None:
+    from dotenv import load_dotenv
+
+    env_path = os.getcwd() + "/.env"
+    if os.path.exists(env_path):
+        load_dotenv(dotenv_path=env_path)
 
 def ok_response(msg: Optional[str] = None) -> dict:
     if msg:
@@ -19,3 +27,6 @@ def clean_input(text: str) -> str:
     cleaned_text = re.sub(disallowed_chars, "", text, flags=re.UNICODE)
     cleaned_text = " ".join(cleaned_text.split())
     return cleaned_text
+
+def is_prod_env() -> bool:
+    return os.environ.get("PROD", "").lower() == "true"
