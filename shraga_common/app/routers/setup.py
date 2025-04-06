@@ -13,14 +13,14 @@ from shraga_common.models import FlowBase
 
 from ..config import get_config, load_config
 from ..middlewares import logging_middleware
+from ..services import list_flows_service
 from .api_app import api_app, load_api_app
-from .flows_api import register_flows
 from .oauth_app import load_oauth_app, oauth_app
 
 
 def setup_app(config_path: str, flows: List[FlowBase]) -> FastAPI:
     shraga_config = load_config(config_path)
-    register_flows(flows)
+    list_flows_service.register_flows(flows, shraga_config)
     load_api_app()
     load_oauth_app()
     
