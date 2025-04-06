@@ -5,6 +5,7 @@ import subprocess
 from user_agents import parse
 
 from ..shraga_config import ShragaConfig
+from ..app.utils import is_prod_env
 
 
 def get_git_commit():
@@ -77,4 +78,5 @@ def get_config_info(shraga_config: ShragaConfig):
     return {
         "debug.enabled": shraga_config.get("debug.enabled"),
         "ui.default_flow": shraga_config.get("ui.default_flow"),
+        "prod": is_prod_env(),
     }

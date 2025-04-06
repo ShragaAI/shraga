@@ -21,8 +21,7 @@ logger = logging.getLogger(__name__)
 async def get_history(
     user_id: Optional[str], 
     start: Optional[str] = None, 
-    end: Optional[str] = None,
-    exclude_debug: Optional[bool] = False
+    end: Optional[str] = None
 ) -> List[Chat]:
     try:
         shraga_config = get_config()
