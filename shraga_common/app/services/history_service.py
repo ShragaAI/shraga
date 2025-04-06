@@ -54,7 +54,7 @@ async def get_history(
                 "by_chat": {
                     "terms": {
                         "field": "chat_id",
-                        "size": 10,
+                        "size": 50,
                         "order": {"first_message": "desc"},
                     },
                     "aggs": {
