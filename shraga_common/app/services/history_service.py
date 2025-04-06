@@ -21,8 +21,7 @@ logger = logging.getLogger(__name__)
 async def get_history(
     user_id: Optional[str], 
     start: Optional[str] = None, 
-    end: Optional[str] = None,
-    exclude_debug: Optional[bool] = False
+    end: Optional[str] = None
 ) -> List[Chat]:
     try:
         shraga_config = get_config()
@@ -31,8 +30,11 @@ async def get_history(
             return []
 
         filters = []
+        chat_list_length = 50
+
         if user_id:
             filters.append({"term": {"user_id": user_id}})
+            chat_list_length = 10
         if start:
             filters.append(
                 {"range": {"timestamp": {"gte": start, "lte": end or "now"}}}
@@ -55,7 +57,7 @@ async def get_history(
                 "by_chat": {
                     "terms": {
                         "field": "chat_id",
-                        "size": 10,
+                        "size": chat_list_length,
                         "order": {"first_message": "desc"},
                     },
                     "aggs": {
