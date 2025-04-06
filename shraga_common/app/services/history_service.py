@@ -30,8 +30,11 @@ async def get_history(
             return []
 
         filters = []
+        chat_list_length = 50
+
         if user_id:
             filters.append({"term": {"user_id": user_id}})
+            chat_list_length = 10
         if start:
             filters.append(
                 {"range": {"timestamp": {"gte": start, "lte": end or "now"}}}
@@ -54,7 +57,7 @@ async def get_history(
                 "by_chat": {
                     "terms": {
                         "field": "chat_id",
-                        "size": 50,
+                        "size": chat_list_length,
                         "order": {"first_message": "desc"},
                     },
                     "aggs": {
