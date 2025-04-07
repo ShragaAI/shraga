@@ -83,14 +83,14 @@ resource "aws_ecs_task_definition" "shraga_app" {
           value = "config.yaml"
         }
       ]
-      logConfiguration = {
+      logConfiguration = local.should_create_cw_log_group ? {
         logDriver = "awslogs"
         options = {
-          awslogs-group         = aws_cloudwatch_log_group.shraga_log_group.name
+          awslogs-group         = aws_cloudwatch_log_group.shraga_log_group[0].name
           awslogs-region        = var.aws_region
           awslogs-stream-prefix = "ecs"
         }
-      }
+      } : null
       mountPoints = [{
         sourceVolume  = "conf-vol"
         containerPath = "/vol1"

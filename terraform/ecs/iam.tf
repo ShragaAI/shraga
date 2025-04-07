@@ -14,27 +14,30 @@ resource "aws_iam_role" "ecs_task_execution_role" {
       }
     ]
   })
+}
 
-  managed_policy_arns = [
-    "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
-  ]
+resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy" {
+  role       = aws_iam_role.ecs_task_execution_role
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+}
 
-  inline_policy {
-    name = "cloudwatch-logs"
-    policy = jsonencode({
-      Version = "2012-10-17"
-      Statement = [
-        {
-          Effect = "Allow"
-          Action = [
-            "logs:CreateLogStream",
-            "logs:PutLogEvents"
-          ]
-          Resource = [
-            "${aws_cloudwatch_log_group.shraga_log_group.arn}:*"
-          ]
-        }
-      ]
-    })
-  }
+resource "aws_iam_role_policy" "ecs_task_execution_role_cw_logs" {
+  count = local.should_create_cw_log_group ? 1 : 0
+  name  = "cloudwatch-logs"
+  role  = aws_iam_role.ecs_task_execution_role
+  policy = jsondecode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "logs:CreateLogStream",
+          "logs:PutLogEvents"
+        ]
+        Resource = [
+          "${aws_cloudwatch_log_group.shraga_log_group[0].arn}:*"
+        ]
+      }
+    ]
+  })
 }
