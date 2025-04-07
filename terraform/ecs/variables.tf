@@ -80,6 +80,13 @@ variable "ecs_sg_id" {
   default     = null
 }
 
+variable "cw_log_group_name" {
+  description = "CloudWatch log group for the ECS task"
+  type        = string
+  nullable    = true # setting to null disables CW logging
+  default     = "/ecs/shraga"
+}
+
 variable "task_replicas" {
   default = 1
 }
