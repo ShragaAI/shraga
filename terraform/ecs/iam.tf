@@ -1,5 +1,10 @@
+locals {
+  should_create_ecs_task_execution_role = var.ecs_task_execution_role_arn == null ? true : false
+}
+
 resource "aws_iam_role" "ecs_task_execution_role" {
-  name = "ecsShragaTaskExecutionRole"
+  count = local.should_create_ecs_task_execution_role ? 1 : 0
+  name  = "ecsShragaTaskExecutionRole"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"

@@ -68,6 +68,12 @@ variable "ecs_task_role_arn" {
   type        = string
 }
 
+variable "ecs_task_execution_role_arn" {
+  description = "IAM role for ECS task execution"
+  type        = string
+  default     = null
+}
+
 variable "task_replicas" {
   default = 1
 }

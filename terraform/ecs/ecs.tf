@@ -21,7 +21,7 @@ resource "aws_ecs_task_definition" "shraga_app" {
   requires_compatibilities = ["FARGATE"]
   cpu                      = var.task_cpu
   memory                   = var.task_memory
-  execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
+  execution_role_arn       = local.should_create_ecs_task_execution_role ? aws_iam_role.ecs_task_execution_role[0].arn : var.ecs_task_execution_role_arn
   task_role_arn            = var.ecs_task_role_arn
   volume {
     name      = "conf-vol"
