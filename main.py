@@ -3,9 +3,10 @@ import os
 import uvicorn
 
 from shraga_common.app import get_config, setup_app
+from shraga_common.flows.demo import flows
 
 config_path = os.getenv("CONFIG_PATH", "config.demo.yaml")
-app = setup_app(config_path)
+app = setup_app(config_path, flows)
 
 if __name__ == "__main__":
 

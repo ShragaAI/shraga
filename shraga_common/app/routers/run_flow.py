@@ -9,14 +9,13 @@ from shraga_common.models import FlowBase, FlowResponse
 from ..config import get_config
 from ..exceptions import RequestCancelledException
 from ..models import FlowRunApiRequest
-from ..routers.request_utils import execute_cancellable_flow
+from .request_utils import execute_cancellable_flow
 from ..services import history_service, list_flows_service
 from ..utils import clean_input
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
 
-@router.post("/")
 async def run_flow(
     request: Request,
     req_body: FlowRunApiRequest,
