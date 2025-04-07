@@ -1,5 +1,5 @@
 locals {
-  should_create_alb = var.alb_tg_arn == null && (var.alb_subnets_ids != null && var.alb_cert_domain != null) ? true : false
+  should_create_alb = var.alb_tg_arn == null ? true : false
 }
 
 resource "aws_alb" "shraga_alb" {
@@ -7,7 +7,7 @@ resource "aws_alb" "shraga_alb" {
   name            = "shraga-load-balancer"
   internal        = var.alb_public == true ? false : true
   subnets         = var.alb_subnets_ids
-  security_groups = [aws_security_group.shraga_alb.id]
+  security_groups = [aws_security_group.shraga_alb[0].id]
   idle_timeout    = 4000
 }
 

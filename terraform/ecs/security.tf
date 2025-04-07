@@ -3,6 +3,7 @@ data "aws_vpc" "selected" {
 }
 
 resource "aws_security_group" "shraga_alb" {
+  count       = local.should_create_alb ? 1 : 0
   name        = "shraga-alb-security-group"
   description = "Controls access to the ALB"
   vpc_id      = var.vpc_id
@@ -38,7 +39,7 @@ resource "aws_security_group" "shraga_ecs_tasks" {
     from_port       = 8000
     to_port         = 8000
     protocol        = "tcp"
-    security_groups = [aws_security_group.shraga_alb.id]
+    security_groups = [local.should_create_alb ? aws_security_group.shraga_alb[0].id : var.alb_sg_id]
   }
 
   egress {
