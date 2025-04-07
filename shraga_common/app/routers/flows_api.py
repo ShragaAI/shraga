@@ -1,17 +1,28 @@
 import logging
 from typing import List, Optional
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, BackgroundTasks, HTTPException, Request
+
+from shraga_common.models import FlowResponse
 
 from ..config import get_config
+from ..models import FlowRunApiRequest
 from ..services import list_flows_service
-from .flows_run_api import router as run_router
+from .run_flow import run_flow
 
 router = APIRouter()
 
 logger = logging.getLogger(__name__)
 
-router.include_router(run_router, prefix="/run")
+
+@router.post("/run")
+async def run_flow_api(
+    request: Request,
+    req_body: FlowRunApiRequest,
+    bg_tasks: BackgroundTasks,
+    keep: bool = True
+) -> FlowResponse:
+    return await run_flow(request, req_body, bg_tasks, keep)
 
 @router.get("/")
 async def get_flows_list(full: Optional[bool] = True) -> List[dict]:
