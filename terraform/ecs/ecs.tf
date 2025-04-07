@@ -113,7 +113,7 @@ resource "aws_ecs_service" "shraga_srv" {
   network_configuration {
     subnets          = var.ecs_subnets_ids
     assign_public_ip = false
-    security_groups  = [aws_security_group.shraga_ecs_tasks.id]
+    security_groups  = local.should_create_ecs_security_group ? [aws_security_group.shraga_ecs_tasks[0].id] : [var.ecs_sg_id]
   }
 
   load_balancer {

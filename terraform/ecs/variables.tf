@@ -48,7 +48,7 @@ variable "alb_tg_arn" {
 }
 
 variable "alb_sg_id" {
-  description = "ARN of the ALB's security group"
+  description = "ID of the ALB's security group"
   type        = string
   default     = null
 }
@@ -70,6 +70,12 @@ variable "ecs_task_role_arn" {
 
 variable "ecs_task_execution_role_arn" {
   description = "IAM role for ECS task execution"
+  type        = string
+  default     = null
+}
+
+variable "ecs_sg_id" {
+  description = "ID of the ECS service security group"
   type        = string
   default     = null
 }

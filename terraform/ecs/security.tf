@@ -31,6 +31,7 @@ resource "aws_security_group" "shraga_alb" {
 }
 
 resource "aws_security_group" "shraga_ecs_tasks" {
+  count       = local.should_create_ecs_security_group ? 1 : 0
   name        = "shraga-ecs-tasks-security-group"
   description = "Allows inbound access from the ALB host only"
   vpc_id      = var.vpc_id
