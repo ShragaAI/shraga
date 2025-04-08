@@ -104,15 +104,16 @@ class BedrockService(LLMService):
             ),
         )
 
-        time_took = time.time() - start_time
-        headers = response.get("ResponseMetadata").get("HTTPHeaders")
+
         stats = FlowStats(
             llm_model_id=model_id,
-            time_took=time_took,
-            latency=safe_to_int(headers.get("x-amzn-bedrock-invocation-latency")),
-            input_tokens=safe_to_int(headers.get("x-amzn-bedrock-input-token-count")),
-            output_tokens=safe_to_int(headers.get("x-amzn-bedrock-output-token-count")),
+            time_took=time.time() - start_time,
+            latency=response['metrics']['latencyMs'],
+            input_tokens=response['usage']['inputTokens'],
+            output_tokens=response['usage']['outputTokens'],
+            total_tokens=response['usage']['totalTokens'],
         )
+
 
         text = response["output"]["message"]["content"][0]["text"]
 
