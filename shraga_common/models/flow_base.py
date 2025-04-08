@@ -116,7 +116,11 @@ class FlowBase:
     def get_stats(self, content):
         if not content:
             return {}
-        stats = content.stats.dict()
+        
+        if isinstance(content, dict):
+            stats = content
+        else: 
+            stats = content.stats.dict()
         stats["flow_id"] = type(self).id()
         return stats
 
