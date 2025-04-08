@@ -23,7 +23,7 @@ resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy" {
 }
 
 resource "aws_iam_role_policy" "ecs_task_execution_role_cw_logs" {
-  count = local.should_create_cw_log_group ? 1 : 0
+  count = local.should_create_ecs_task_execution_role && local.should_create_cw_log_group ? 1 : 0
   name  = "cloudwatch-logs"
   role  = aws_iam_role.ecs_task_execution_role[0].name
   policy = jsonencode({
