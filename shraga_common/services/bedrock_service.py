@@ -4,13 +4,14 @@ import time
 from typing import List, Literal, Optional, TypedDict
 
 import boto3
-
+import botocore
 from shraga_common import ShragaConfig
 
 from ..models import FlowStats
 from ..utils import safe_to_int
 from .common import LLMModelResponse
 from .llm_service import LLMService, LLMServiceOptions
+from ..app.exceptions import LLMServiceUnavailableException
 
 
 class BedrockChatModelId(TypedDict):
@@ -92,32 +93,42 @@ class BedrockService(LLMService):
         system_messages = [{"text": msg} for msg in system_prompt]
         messages = [{"role": "user", "content": [{"text": prompt}]}]
 
-        start_time = time.time()
-        response = await asyncio.get_event_loop().run_in_executor(
-            None,
-            lambda: self.boto.converse(
-                modelId=model_id,
-                system=system_messages,
-                messages=messages,
-                toolConfig=tool_config,
-                inferenceConfig={"temperature": 0.0, "maxTokens": 8192},
-            ),
-        )
+        try:
+            start_time = time.time()
+            response = await asyncio.get_event_loop().run_in_executor(
+                None,
+                lambda: self.boto.converse(
+                    modelId=model_id,
+                    system=system_messages,
+                    messages=messages,
+                    toolConfig=tool_config,
+                    inferenceConfig={"temperature": 0.0, "maxTokens": 8192},
+                ),
+            )
 
+            stats = FlowStats(
+                llm_model_id=model_id,
+                time_took=time.time() - start_time,
+                latency=response['metrics']['latencyMs'],
+                input_tokens=response['usage']['inputTokens'],
+                output_tokens=response['usage']['outputTokens'],
+                total_tokens=response['usage']['totalTokens'],
+            )
 
-        stats = FlowStats(
-            llm_model_id=model_id,
-            time_took=time.time() - start_time,
-            latency=response['metrics']['latencyMs'],
-            input_tokens=response['usage']['inputTokens'],
-            output_tokens=response['usage']['outputTokens'],
-            total_tokens=response['usage']['totalTokens'],
-        )
+            text = response["output"]["message"]["content"][0]["text"]
 
-
-        text = response["output"]["message"]["content"][0]["text"]
-
-        return LLMModelResponse(text=text, stats=stats)
+            return LLMModelResponse(text=text, stats=stats)
+        
+        except (
+            boto3.exceptions.Boto3Error,
+            botocore.exceptions.BotoCoreError,
+            botocore.exceptions.ClientError,
+            asyncio.TimeoutError,
+        ) as e:
+            raise LLMServiceUnavailableException(f"Bedrock service unavailable")
+        except Exception as e:
+            raise Exception(f"Error invoking Bedrock model: {str(e)}")
+        
 
     async def invoke_chat_model(
         self, prompt: str, options: Optional[LLMServiceOptions] = None
@@ -144,25 +155,37 @@ class BedrockService(LLMService):
             }
         )
 
-        start_time = time.time()
-        response = await asyncio.get_event_loop().run_in_executor(
-            None,
-            lambda: self.boto.invoke_model(
-                body=body,
-                modelId=model_id,
-                accept="application/json",
-                contentType="application/json",
-            ),
-        )
-        time_took = time.time() - start_time
-        headers = response.get("ResponseMetadata").get("HTTPHeaders")
-        stats = FlowStats(
-            llm_model_id=model_id,
-            time_took=time_took,
-            latency=safe_to_int(headers.get("x-amzn-bedrock-invocation-latency")),
-            input_tokens=safe_to_int(headers.get("x-amzn-bedrock-input-token-count")),
-            output_tokens=safe_to_int(headers.get("x-amzn-bedrock-output-token-count")),
-        )
-        body = response.get("body").read()
-        text = json.loads(body).get("content")[0].get("text")
-        return LLMModelResponse(text=text, stats=stats)
+        try:
+            start_time = time.time()
+            response = await asyncio.get_event_loop().run_in_executor(
+                None,
+                lambda: self.boto.invoke_model(
+                    body=body,
+                    modelId=model_id,
+                    accept="application/json",
+                    contentType="application/json",
+                ),
+            )
+            time_took = time.time() - start_time
+            headers = response.get("ResponseMetadata").get("HTTPHeaders")
+            stats = FlowStats(
+                llm_model_id=model_id,
+                time_took=time_took,
+                latency=safe_to_int(headers.get("x-amzn-bedrock-invocation-latency")),
+                input_tokens=safe_to_int(headers.get("x-amzn-bedrock-input-token-count")),
+                output_tokens=safe_to_int(headers.get("x-amzn-bedrock-output-token-count")),
+            )
+            body = response.get("body").read()
+            text = json.loads(body).get("content")[0].get("text")
+            return LLMModelResponse(text=text, stats=stats)
+        
+        except (
+            boto3.exceptions.Boto3Error,
+            botocore.exceptions.BotoCoreError,
+            botocore.exceptions.ClientError,
+            asyncio.TimeoutError,
+        ) as e:
+            raise LLMServiceUnavailableException(f"Bedrock service unavailable")
+        except Exception as e:
+            raise Exception(f"Error invoking Bedrock model: {str(e)}")
+
