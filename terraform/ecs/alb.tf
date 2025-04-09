@@ -1,7 +1,3 @@
-locals {
-  should_create_alb = var.alb_tg_arn == null ? true : false
-}
-
 resource "aws_alb" "shraga_alb" {
   count           = local.should_create_alb ? 1 : 0
   name            = "shraga-load-balancer"
