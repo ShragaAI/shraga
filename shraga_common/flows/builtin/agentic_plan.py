@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Optional
 
 from shraga_common import ShragaConfig
-from shraga_common.app import RequestCancelledException
+from shraga_common.app import RequestCancelledException, LLMServiceUnavailableException
 from shraga_common.models import FlowResponse, FlowRunRequest
 from shraga_common.services import LLMServiceOptions
 
@@ -96,7 +96,7 @@ class AgenticPlanFlowBase(LLMFlowBase):
             else:
                 response_text = content.text
 
-        except RequestCancelledException:
+        except (RequestCancelledException, LLMServiceUnavailableException):
             raise
         except Exception as e:
             payload = {"error": str(e), "body": content if content else ""}

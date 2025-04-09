@@ -4,7 +4,7 @@ from abc import abstractmethod
 from datetime import datetime
 from typing import List, Optional
 
-from shraga_common.app import RequestCancelledException
+from shraga_common.app import RequestCancelledException, LLMServiceUnavailableException
 from shraga_common.models import (FlowBase, FlowResponse, FlowRunRequest,
                                   HistoryMessage)
 from shraga_common.services import (BedrockService, LLMService,
@@ -92,8 +92,10 @@ class LLMFlowBase(FlowBase):
 
             except asyncio.CancelledError:
                 raise RequestCancelledException("LLM flow cancelled")
+            except LLMServiceUnavailableException:
+                raise
 
-        except RequestCancelledException:
+        except (RequestCancelledException, LLMServiceUnavailableException):
             raise
         except Exception as e:
             payload = {"error": str(e), "body": content if content else ""}
