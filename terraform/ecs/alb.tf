@@ -21,7 +21,7 @@ resource "aws_alb_target_group" "shraga_alb_tg" {
     protocol            = "HTTP"
     matcher             = "200"
     timeout             = "3"
-    path                = "/"
+    path                = "/healthz"
     unhealthy_threshold = "2"
   }
 }

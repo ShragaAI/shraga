@@ -17,7 +17,11 @@ async def logging_middleware(request: Request, call_next) -> Response:
 
         response = await call_next(request)
 
-        user_display_name = getattr(request.state, "user_display_name", "anonymous")
+        if request.url.path == "/healthz":
+            return response
+
+        user_display_name = getattr(
+            request.state, "user_display_name", "anonymous")
 
         took = int((time.time() - start_time) * 1000)
         shraga_config = get_config()

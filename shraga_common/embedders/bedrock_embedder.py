@@ -102,7 +102,10 @@ class BedrockEmbedder(BaseEmbedder):
             response_body = response["body"].read().decode("utf-8")
             embeddings = json.loads(response_body).get("embeddings")
             if isinstance(embeddings, list):
-                return embeddings[0] if embeddings else None
+                v = embeddings[0] if embeddings else None
+                if not v:
+                    logger.warning("Empty embedding list returned.")
+                return v
             else:
                 logger.warning("Unexpected embedding format: %s", embeddings)
                 return None
