@@ -6,7 +6,7 @@ from fastapi import Request
 
 from shraga_common.models import FlowBase, FlowResponse
 
-from ..exceptions import RequestCancelledException
+from ..exceptions import RequestCancelledException, LLMServiceUnavailableException
 from ..models import FlowRunApiRequest
 
 logger = logging.getLogger(__name__)
@@ -55,7 +55,10 @@ async def execute_cancellable_flow(
                 flow_task.cancel()
                 raise RequestCancelledException("Request cancelled by client")
 
-            return await flow_task
+            try:
+                return await flow_task
+            except LLMServiceUnavailableException:
+                raise
 
         finally:
             for task in [flow_task, cancel_task]:
@@ -63,7 +66,11 @@ async def execute_cancellable_flow(
                     task.cancel()
                     try:
                         await task
-                    except (asyncio.CancelledError, RequestCancelledException):
+                    except (
+                        asyncio.CancelledError, 
+                        RequestCancelledException, 
+                        LLMServiceUnavailableException
+                    ):
                         pass
 
     finally:
