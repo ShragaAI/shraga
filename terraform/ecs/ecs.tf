@@ -11,7 +11,8 @@ resource "aws_ecs_cluster" "shraga_cluster" {
 }
 
 resource "aws_cloudwatch_log_group" "shraga_log_group" {
-  name              = "/ecs/shraga"
+  count             = local.should_create_cw_log_group ? 1 : 0
+  name              = var.cw_log_group_name
   retention_in_days = 3
 }
 
@@ -21,7 +22,7 @@ resource "aws_ecs_task_definition" "shraga_app" {
   requires_compatibilities = ["FARGATE"]
   cpu                      = var.task_cpu
   memory                   = var.task_memory
-  execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
+  execution_role_arn       = local.should_create_ecs_task_execution_role ? aws_iam_role.ecs_task_execution_role[0].arn : var.ecs_task_execution_role_arn
   task_role_arn            = var.ecs_task_role_arn
   volume {
     name      = "conf-vol"
@@ -45,14 +46,14 @@ resource "aws_ecs_task_definition" "shraga_app" {
           hostPort      = 8000
         }
       ]
-      logConfiguration = {
+      logConfiguration = local.should_create_cw_log_group ? {
         logDriver = "awslogs"
         options = {
-          awslogs-group         = aws_cloudwatch_log_group.shraga_log_group.name
+          awslogs-group         = aws_cloudwatch_log_group.shraga_log_group[0].name
           awslogs-region        = var.aws_region
           awslogs-stream-prefix = "ecs"
         }
-      }
+      } : null
       mountPoints = [{
         sourceVolume  = "conf-vol"
         containerPath = "/vol1"
@@ -82,14 +83,14 @@ resource "aws_ecs_task_definition" "shraga_app" {
           value = "config.yaml"
         }
       ]
-      logConfiguration = {
+      logConfiguration = local.should_create_cw_log_group ? {
         logDriver = "awslogs"
         options = {
-          awslogs-group         = aws_cloudwatch_log_group.shraga_log_group.name
+          awslogs-group         = aws_cloudwatch_log_group.shraga_log_group[0].name
           awslogs-region        = var.aws_region
           awslogs-stream-prefix = "ecs"
         }
-      }
+      } : null
       mountPoints = [{
         sourceVolume  = "conf-vol"
         containerPath = "/vol1"
@@ -113,7 +114,7 @@ resource "aws_ecs_service" "shraga_srv" {
   network_configuration {
     subnets          = var.ecs_subnets_ids
     assign_public_ip = false
-    security_groups  = [aws_security_group.shraga_ecs_tasks.id]
+    security_groups  = local.should_create_ecs_security_group ? [aws_security_group.shraga_ecs_tasks[0].id] : [var.ecs_sg_id]
   }
 
   load_balancer {
