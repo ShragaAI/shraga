@@ -5,13 +5,14 @@ from typing import List, Literal, Optional, TypedDict
 
 import boto3
 import botocore
+
 from shraga_common import ShragaConfig
 
+from ..app.exceptions import LLMServiceUnavailableException
 from ..models import FlowStats
 from ..utils import safe_to_int
 from .common import LLMModelResponse
 from .llm_service import LLMService, LLMServiceOptions
-from ..app.exceptions import LLMServiceUnavailableException
 
 
 class BedrockChatModelId(TypedDict):
@@ -102,9 +103,14 @@ class BedrockService(LLMService):
                     system=system_messages,
                     messages=messages,
                     toolConfig=tool_config,
-                    inferenceConfig={"temperature": 0.0, "maxTokens": 8192},
+                    inferenceConfig={"temperature": 0.0, "maxTokens": 8192}
                 ),
             )
+            
+            if response.get('Error'):
+                error_code = response['Error'].get('Code')
+                error_message = response['Error'].get('Message')
+                raise LLMServiceUnavailableException(f"Bedrock error ({error_code}, {error_message})")
 
             stats = FlowStats(
                 llm_model_id=model_id,
@@ -119,13 +125,16 @@ class BedrockService(LLMService):
 
             return LLMModelResponse(text=text, stats=stats)
         
+        except LLMServiceUnavailableException:
+            raise
         except (
             boto3.exceptions.Boto3Error,
+            boto3.exceptions.RetriesExceededError,
             botocore.exceptions.BotoCoreError,
             botocore.exceptions.ClientError,
             asyncio.TimeoutError,
         ) as e:
-            raise LLMServiceUnavailableException(f"Bedrock service unavailable")
+            raise LLMServiceUnavailableException("Bedrock error", e)
         except Exception as e:
             raise Exception(f"Error invoking Bedrock model: {str(e)}")
         
@@ -181,11 +190,12 @@ class BedrockService(LLMService):
         
         except (
             boto3.exceptions.Boto3Error,
+            boto3.exceptions.RetriesExceededError,
             botocore.exceptions.BotoCoreError,
             botocore.exceptions.ClientError,
             asyncio.TimeoutError,
         ) as e:
-            raise LLMServiceUnavailableException(f"Bedrock service unavailable")
+            raise LLMServiceUnavailableException("Bedrock error", e)
         except Exception as e:
             raise Exception(f"Error invoking Bedrock model: {str(e)}")
 

@@ -7,7 +7,7 @@ from fastapi.responses import JSONResponse
 from shraga_common.models import FlowBase, FlowResponse
 
 from ..config import get_config
-from ..exceptions import RequestCancelledException, LLMServiceUnavailableException, EmbeddingVectorNoneException
+from ..exceptions import RequestCancelledException, LLMServiceUnavailableException
 from ..models import FlowRunApiRequest
 from .request_utils import execute_cancellable_flow
 from ..services import history_service, list_flows_service
@@ -16,7 +16,7 @@ from ..utils import clean_input
 logger = logging.getLogger(__name__)
 router = APIRouter()
 
-def add_log_task(bg_tasks: BackgroundTasks, keep: bool, request: Request, req_body: FlowRunApiRequest, text: str):
+def add_log_error_task(bg_tasks: BackgroundTasks, keep: bool, request: Request, req_body: FlowRunApiRequest, text: str):
     if keep:
         bg_tasks.add_task(
             history_service.log_interaction,
@@ -77,19 +77,15 @@ async def run_flow(
         return rsp
 
     except RequestCancelledException:
-        add_log_task(bg_tasks, keep, request, req_body, "Request cancelled by client")
+        add_log_error_task(bg_tasks, keep, request, req_body, "Request cancelled by client")
         return JSONResponse(status_code=500, content={"detail": "Request cancelled by client"})
     
     except LLMServiceUnavailableException as e:
-        add_log_task(bg_tasks, keep, request, req_body, str(e))
+        add_log_error_task(bg_tasks, keep, request, req_body, str(e))
         return JSONResponse(status_code=503, content={"detail": str(e)})
-    
-    except EmbeddingVectorNoneException as e:
-        add_log_task(bg_tasks, keep, request, req_body, str(e))
-        return JSONResponse(status_code=500, content={"detail": str(e)})
 
     except Exception as e:
-        add_log_task(bg_tasks, keep, request, req_body, str(e))
+        add_log_error_task(bg_tasks, keep, request, req_body, str(e))
         logger.exception("Error running flow:", exc_info=e)
         # Important: do not raise an exception here, otherwise background tasks will not be executed
         return JSONResponse(status_code=500, content={"detail": str(e)})

@@ -7,7 +7,7 @@ from boto3.exceptions import Boto3Error
 
 from shraga_common import ShragaConfig
 
-from ..app.exceptions import EmbeddingVectorNoneException, LLMServiceUnavailableException
+from ..app.exceptions import LLMServiceUnavailableException
 from .base_embedder import BaseEmbedder, BaseEmbedderGenerateOptions
 
 # Configure logging
@@ -105,18 +105,13 @@ class BedrockEmbedder(BaseEmbedder):
             if isinstance(embeddings, list):
                 v = embeddings[0] if embeddings else None
                 if not v:
-                    logger.warning("Empty embedding list returned.")
-                    raise EmbeddingVectorNoneException("No embeddings returned from Bedrock")
+                    raise LLMServiceUnavailableException("Empty embedding")
                 return v
             else:
-                logger.warning("Unexpected embedding format: %s", embeddings)
-                raise EmbeddingVectorNoneException("Invalid embedding format returned from Bedrock")
+                raise LLMServiceUnavailableException("Unexpected embedding format")
         except Boto3Error as e:
-            logger.error("Boto3 error occurred: %s", e)
-            raise LLMServiceUnavailableException(f"Bedrock service unavailable")
+            raise LLMServiceUnavailableException("Bedrock error", e)
         except json.JSONDecodeError as e:
-            logger.error("JSON decode error: %s", e)
-            raise EmbeddingVectorNoneException(f"Failed to parse Bedrock response: {str(e)}")
+            raise LLMServiceUnavailableException("Failed to decode embedding", e)
         except Exception as e:
-            logger.error("An unexpected error occurred: %s", e)
-            raise EmbeddingVectorNoneException(f"Unexpected error generating embeddings: {str(e)}")
+            raise LLMServiceUnavailableException("Unexpected error", e)

@@ -6,7 +6,7 @@ from fastapi import Request
 
 from shraga_common.models import FlowBase, FlowResponse
 
-from ..exceptions import RequestCancelledException, LLMServiceUnavailableException, EmbeddingVectorNoneException
+from ..exceptions import RequestCancelledException, LLMServiceUnavailableException
 from ..models import FlowRunApiRequest
 
 logger = logging.getLogger(__name__)
@@ -57,7 +57,7 @@ async def execute_cancellable_flow(
 
             try:
                 return await flow_task
-            except (LLMServiceUnavailableException, EmbeddingVectorNoneException):
+            except LLMServiceUnavailableException:
                 raise
 
         finally:
@@ -69,8 +69,7 @@ async def execute_cancellable_flow(
                     except (
                         asyncio.CancelledError, 
                         RequestCancelledException, 
-                        LLMServiceUnavailableException, 
-                        EmbeddingVectorNoneException
+                        LLMServiceUnavailableException
                     ):
                         pass
 
