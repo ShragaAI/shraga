@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.1.3 (2025-04-15)
+
+### Bug Fixes
+
+- Don't upload to gh release if not released
+  ([`e06f7e7`](https://github.com/ShragaAI/shraga/commit/e06f7e7ddd6f76e8dad3b55967dc68521bb81674))
+
+
 ## v0.1.2 (2025-04-15)
 
 ### Bug Fixes
