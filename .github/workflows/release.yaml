@@ -42,10 +42,7 @@ jobs:
           git_committer_email: "actions@users.noreply.github.com"
 
       - name: Build | Build package
-        run: |
-          poetry config virtualenvs.create false
-          poetry install --no-interaction --no-root
-          poetry build
+        run: poetry build
 
       - name: Publish | Upload package to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
