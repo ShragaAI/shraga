@@ -1,6 +1,20 @@
 # CHANGELOG
 
 
+## v0.1.4 (2025-04-15)
+
+### Bug Fixes
+
+- Build
+  ([`94d4f08`](https://github.com/ShragaAI/shraga/commit/94d4f08a03f7f66dfabf9da541151c3825998317))
+
+- Install poetry
+  ([`da18535`](https://github.com/ShragaAI/shraga/commit/da18535cfce44e86a1fa003d80a5bfcd48c1e23f))
+
+- Restore semantic release config
+  ([`fb3cb9d`](https://github.com/ShragaAI/shraga/commit/fb3cb9db623ebd12f7e3cf9061d2f934b97a90c2))
+
+
 ## v0.1.3 (2025-04-15)
 
 ### Bug Fixes
