@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.1.5 (2025-04-15)
+
+### Bug Fixes
+
+- Lock
+  ([`3b83b71`](https://github.com/ShragaAI/shraga/commit/3b83b714e4fb537ae8c8e80a4fcca37838f489e9))
+
+
 ## v0.1.4 (2025-04-15)
 
 ### Bug Fixes
