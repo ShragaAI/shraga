@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.1.0 (2025-04-15)
+
+### Features
+
+- Release script
+  ([`62bbc2c`](https://github.com/ShragaAI/shraga/commit/62bbc2c97150889dbdeaa60941454a037008c884))
+
+
 ## v0.0.0 (2025-04-15)
 
 ### Chores
