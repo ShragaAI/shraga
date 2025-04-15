@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.1.2 (2025-04-15)
+
+### Bug Fixes
+
+- Test
+  ([`4aca46d`](https://github.com/ShragaAI/shraga/commit/4aca46dcbe17a9f8848e25a16a350f733a7daf3e))
+
+
 ## v0.1.1 (2025-04-15)
 
 ### Bug Fixes
