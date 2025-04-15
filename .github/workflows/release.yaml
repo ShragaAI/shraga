@@ -37,11 +37,13 @@ jobs:
           git_committer_name: "github-actions"
           git_committer_email: "actions@users.noreply.github.com"
 
-      - name: Publish package distributions to PyPI
+      - name: Publish | Upload package to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         if: steps.release.outputs.released == 'true'
 
-      - name: Upload to GH Release Assets
-        uses: python-semantic-release/publish-action@v9
+      - name: Publish | Upload to GitHub Release Assets
+        uses: python-semantic-release/publish-action@v9.21.0
+        if: steps.release.outputs.released == 'true'
         with:
           github_token: ${{ secrets.GH_TOKEN }}
+          tag: ${{ steps.release.outputs.tag }}
