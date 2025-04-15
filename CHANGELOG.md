@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.1.6 (2025-04-15)
+
+### Bug Fixes
+
+- Build
+  ([`382d31a`](https://github.com/ShragaAI/shraga/commit/382d31a052dd1dfc2094b7b16b6de434a718b706))
+
+
 ## v0.1.5 (2025-04-15)
 
 ### Bug Fixes
