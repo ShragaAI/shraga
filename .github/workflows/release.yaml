@@ -3,25 +3,29 @@ name: Release
 on:
   push:
     branches:
-      - main 
-  workflow_dispatch: 
-
+      - main
+  workflow_dispatch:
 
 jobs:
-    release:
-      runs-on: ubuntu-latest
-      concurrency: release
-      permissions:
-        id-token: write
-  
-      steps:
+  release:
+    runs-on: ubuntu-latest
+    concurrency: release
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+
+    steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-  
+
+      - name: Debug secrets
+        run: |
+          echo "GH_TOKEN=${{ secrets.GH_TOKEN }}"
+
       - name: Python Semantic Release
         id: release
         uses: python-semantic-release/python-semantic-release@v9.21.0
         with:
           github_token: ${{ secrets.GH_TOKEN }}
-  
