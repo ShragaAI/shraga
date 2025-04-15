@@ -56,7 +56,6 @@ commit_parser = "conventional"
 major_on_zero = false
 allow_zero_version = true
 branch="main"
-build_command="poetry build"
 
 [tool.semantic_release.commit_parser_options]
 minor_tags = ["feat"]
