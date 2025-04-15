@@ -9,27 +9,39 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
-    concurrency: release
+    concurrency:
+      group: ${{ github.workflow }}-release-${{ github.ref_name }}
+      cancel-in-progress: false
+
     permissions:
       contents: write
-      issues: write
-      pull-requests: write
+      id-token: write
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Setup | Checkout Repository on Release Branch
+        uses: actions/checkout@v4
         with:
+          ref: ${{ github.ref_name }}
           fetch-depth: 0
 
-      - name: Debug secrets
+      - name: Setup | Force release branch to be at workflow sha
         run: |
-          echo "GH_TOKEN=${{ secrets.GH_TOKEN }}"
+          git reset --hard ${{ github.sha }}
+
 
       - name: Python Semantic Release
         id: release
         uses: python-semantic-release/python-semantic-release@v9
         with:
           github_token: ${{ secrets.GH_TOKEN }}
+          git_committer_name: "github-actions"
+          git_committer_email: "actions@users.noreply.github.com"
 
       - name: Publish package distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         if: steps.release.outputs.released == 'true'
+
+      - name: Upload to GH Release Assets
+        uses: python-semantic-release/publish-action@v9
+        with:
+          github_token: ${{ secrets.GH_TOKEN }}
