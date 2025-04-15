@@ -7,6 +7,9 @@ readme = "README.md"
 license = "Apache-2.0"
 packages = [{include = "shraga_common"}]
 
+[tool.commitizen]
+name = "cz_conventional_commits"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
@@ -48,6 +51,7 @@ chromedriver-binary = "130.0.6723.116"
 pylint = "^3.3.4"
 python-dotenv = "^1.1.0"
 python-semantic-release = "^9.21.0"
+commitizen = "^4.6.0"
 
 [tool.semantic_release]
 version_toml = ["pyproject.toml:tool.poetry.version"]

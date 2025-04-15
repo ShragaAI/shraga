@@ -1,0 +1,9 @@
+repos:
+  - repo: local
+    hooks:
+      - id: cz-verify-commit
+        name: Validate Conventional Commit
+        entry: poetry run cz check --commit-msg-file
+        language: system
+        pass_filenames: true
+        stages: [commit-msg]
