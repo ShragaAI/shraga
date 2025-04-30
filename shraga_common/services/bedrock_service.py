@@ -34,7 +34,8 @@ BEDROCK_CHAT_MODEL_IDS: BedrockChatModelId = {
     # cross region routing
     "haiku_3_5": "us.anthropic.claude-3-5-haiku-20241022-v1:0",
     "sonnet_3_5_v2": "us.anthropic.claude-3-5-sonnet-20241022-v2:0",
-    "sonnet_3_7": "us.anthropic.claude-3-7-sonnet-20250219-v1:0"
+    "sonnet_3_7": "us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+    "nova_pro": "amazon.nova-pro-v1:0",
 }
 
 
@@ -81,7 +82,7 @@ class BedrockService(LLMService):
         return await self.invoke_chat_model(prompt, options)
 
     async def invoke_converse_model(
-        self, system_prompt: List[str], prompt: str, tool_config, options
+        self, system_prompt: List[str], prompt: str, tool_config: Optional[dict] = {}, options: dict = {}
     ):
         if not options:
             options = {
@@ -96,13 +97,25 @@ class BedrockService(LLMService):
 
         try:
             start_time = time.time()
-            response = await asyncio.get_event_loop().run_in_executor(
+            if tool_config:
+                response = await asyncio.get_event_loop().run_in_executor(
+                    None,
+                    lambda: self.boto.converse(
+                        modelId=model_id,
+                        system=system_messages,
+                        messages=messages,
+                        toolConfig=tool_config,
+                        inferenceConfig={"temperature": 0.0, "maxTokens": 8192}
+                    ),
+                )
+
+            else:
+                response = await asyncio.get_event_loop().run_in_executor(
                 None,
                 lambda: self.boto.converse(
                     modelId=model_id,
                     system=system_messages,
                     messages=messages,
-                    toolConfig=tool_config,
                     inferenceConfig={"temperature": 0.0, "maxTokens": 8192}
                 ),
             )
