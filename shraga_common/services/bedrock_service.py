@@ -95,28 +95,22 @@ class BedrockService(LLMService):
         system_messages = [{"text": msg} for msg in system_prompt]
         messages = [{"role": "user", "content": [{"text": prompt}]}]
 
+        converse_params = {
+                "modelId": model_id,
+                "system": system_messages,
+                "messages": messages,
+                "inferenceConfig": {"temperature": 0.0, "maxTokens": 8192},
+            }
+        
+        if tool_config:
+            converse_params["toolConfig"] = tool_config
+        
         try:
             start_time = time.time()
-            if tool_config:
-                response = await asyncio.get_event_loop().run_in_executor(
-                    None,
-                    lambda: self.boto.converse(
-                        modelId=model_id,
-                        system=system_messages,
-                        messages=messages,
-                        toolConfig=tool_config,
-                        inferenceConfig={"temperature": 0.0, "maxTokens": 8192}
-                    ),
-                )
-
-            else:
-                response = await asyncio.get_event_loop().run_in_executor(
+            response = await asyncio.get_event_loop().run_in_executor(
                 None,
                 lambda: self.boto.converse(
-                    modelId=model_id,
-                    system=system_messages,
-                    messages=messages,
-                    inferenceConfig={"temperature": 0.0, "maxTokens": 8192}
+                    **converse_params,
                 ),
             )
             
