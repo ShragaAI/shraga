@@ -1,6 +1,30 @@
 # CHANGELOG
 
 
+## v0.1.7 (2025-04-30)
+
+### Bug Fixes
+
+- Add nova support ([#24](https://github.com/ShragaAI/shraga/pull/24),
+  [`31a9345`](https://github.com/ShragaAI/shraga/commit/31a9345a2ed229f5f2f81721e42866f05e5c9953))
+
+* feat: Add nova support
+
+* feat: remove duplicates
+
+---------
+
+Co-authored-by: Dinor Nagar <dinornagar@Dinors-MacBook-Air.local>
+
+### Chores
+
+- Don't build if already published
+  ([`4c7d14d`](https://github.com/ShragaAI/shraga/commit/4c7d14d698887354ae2ac6335e474056fe7e6da7))
+
+- Pre commit hook message linter
+  ([`7aa0a93`](https://github.com/ShragaAI/shraga/commit/7aa0a939a359b30b0825848bc6a42047b7232409))
+
+
 ## v0.1.6 (2025-04-15)
 
 ### Bug Fixes
