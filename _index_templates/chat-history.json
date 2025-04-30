@@ -1,0 +1,149 @@
+{
+  "index_patterns": ["shraga-chat-history*"],
+  "template": {
+    "aliases": {
+      "chat-history": {}
+    },
+    "settings": {
+      "index": {
+        "number_of_shards": 1,
+        "number_of_replicas": 2
+      }
+    },
+    "mappings": {
+      "dynamic_templates": [
+        {
+          "stats": {
+            "match_mapping_type": "object",
+            "match": "*_stats",
+            "mapping": {
+              "dynamic": false,
+              "properties": {
+                "latency": {
+                  "type": "scaled_float",
+                  "scaling_factor": 100
+                },
+                "input_tokens": {
+                  "type": "integer"
+                },
+                "output_tokens": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "properties": {
+        "timestamp": {
+          "type": "date"
+        },
+        "chat_id": {
+          "type": "keyword"
+        },
+        "user_id": {
+          "type": "keyword"
+        },
+        "flow_id": {
+          "type": "keyword"
+        },
+        "msg_type": {
+          "type": "keyword"
+        },
+        "text": {
+          "type": "text"
+        },
+        "feedback": {
+          "type": "text"
+        },
+        "user_agent": {
+          "properties": {
+            "browser": {
+              "type": "keyword"
+            },
+            "browser_version": {
+              "type": "keyword"
+            },
+            "os": {
+              "type": "keyword"
+            },
+            "os_version": {
+              "type": "keyword"
+            },
+            "device": {
+              "type": "keyword"
+            },
+            "original": {
+              "type": "keyword"
+            },
+            "device_type": {
+              "type": "keyword"
+            },
+            "device_brand": {
+              "type": "keyword"
+            },
+            "device_model": {
+              "type": "keyword"
+            }
+          }
+        },
+        "platform": {
+          "properties": {
+            "architecture": {
+              "type": "keyword"
+            },
+            "git_commit": {
+              "type": "keyword"
+            },
+            "machine_name": {
+              "type": "keyword"
+            },
+            "node_name": {
+              "type": "keyword"
+            },
+            "platform_details": {
+              "type": "keyword"
+            },
+            "processor": {
+              "type": "keyword"
+            },
+            "python_version": {
+              "type": "keyword"
+            },
+            "release": {
+              "type": "keyword"
+            },
+            "system": {
+              "type": "keyword"
+            },
+            "version": {
+              "type": "keyword"
+            }
+          }
+        },
+        "stats": {
+          "type": "object"
+        },
+        "payload": {
+          "type": "object"
+        },
+        "retrieval_results": {
+          "type": "object",
+          "enabled": false
+        },
+        "trace": {
+          "type": "object",
+          "enabled": false
+        },
+        "context": {
+          "type": "object",
+          "enabled": false
+        },
+        "traceback": {
+          "type": "text",
+          "index": false
+        }
+      }
+    }
+  }
+}
