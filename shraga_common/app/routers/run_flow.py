@@ -67,7 +67,7 @@ async def run_flow(
         if hasattr(req_body, "chat_id"):
             rsp.chat_id = req_body.chat_id
 
-        if keep and rsp.stats:
+        if keep:
             # log flow execution
             for stat in rsp.stats:
                 bg_tasks.add_task(history_service.log_flow, request, req_body, stat)
