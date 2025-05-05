@@ -68,9 +68,10 @@ async def run_flow(
             rsp.chat_id = req_body.chat_id
 
         if keep:
-            # log flow execution
-            for stat in rsp.stats:
-                bg_tasks.add_task(history_service.log_flow, request, req_body, stat)
+            if rsp.stats:
+                # log flow execution
+                for stat in rsp.stats:
+                    bg_tasks.add_task(history_service.log_flow, request, req_body, stat)
             # we need to run this synchronously to avoid a race condition with the FE fetching the history
             await history_service.log_system_message(request, req_body, response=rsp)
 
