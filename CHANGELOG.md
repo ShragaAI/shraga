@@ -1,6 +1,22 @@
 # CHANGELOG
 
 
+## v0.1.8 (2025-05-05)
+
+### Bug Fixes
+
+- Fix chat logging ([#25](https://github.com/ShragaAI/shraga/pull/25),
+  [`b6ea2ab`](https://github.com/ShragaAI/shraga/commit/b6ea2ab6958b770cb2368a01b64dad7bd92d3c17))
+
+* fix: enable logging for chat messages without stats
+
+* fix: handle empty stats
+
+---------
+
+Co-authored-by: Dinor Nagar <dinornagar@Dinors-MacBook-Air.local>
+
+
 ## v0.1.7 (2025-04-30)
 
 ### Bug Fixes
