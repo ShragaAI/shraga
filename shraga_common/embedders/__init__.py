@@ -1,5 +1,6 @@
 from .base_embedder import BaseEmbedder
 from .bedrock_embedder import BedrockEmbedder
+from .cohere_embedder import CohereEmbedder
 
 # commented out due to slow loading!
 # from .google_embedder import GoogleEmbedder
@@ -12,4 +13,5 @@ __all__ = [
     "EmbedderModelProvider",
     "BedrockEmbedder",
     "OpenAIEmbedder",
+    "CohereEmbedder",
 ]
