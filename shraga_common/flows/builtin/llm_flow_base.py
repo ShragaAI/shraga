@@ -103,7 +103,7 @@ class LLMFlowBase(FlowBase):
         return response_text, payload, content
 
     async def execute(self, request: FlowRunRequest) -> FlowResponse:
-        self.trace(f"using {self.llm_model_provider}\{self.llm_model_name}")
+        self.trace(f"using {self.llm_model_provider}\\{self.llm_model_name}")
         prompt = self.format_prompt(
             request.question,
             {
