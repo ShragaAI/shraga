@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.1.10 (2025-05-14)
+
+### Bug Fixes
+
+- Retrieveconfig in pydantic
+  ([`34c20e7`](https://github.com/ShragaAI/shraga/commit/34c20e76e3f62951c1182d9222ed1f93d7291c04))
+
+
 ## v0.1.9 (2025-05-14)
 
 ### Bug Fixes
