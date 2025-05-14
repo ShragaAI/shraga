@@ -1,6 +1,17 @@
 # CHANGELOG
 
 
+## v0.1.11 (2025-05-14)
+
+### Bug Fixes
+
+- Retriever config
+  ([`0c34083`](https://github.com/ShragaAI/shraga/commit/0c34083d62932ec31b36877242de33331b987271))
+
+- Typo
+  ([`668c53d`](https://github.com/ShragaAI/shraga/commit/668c53d93b607ef95ddb2640146c519b82ea5179))
+
+
 ## v0.1.10 (2025-05-14)
 
 ### Bug Fixes
