@@ -23,7 +23,7 @@ def non_ok_response(msg: Optional[str] = None) -> dict:
 
 
 def clean_input(text: str) -> str:
-    disallowed_chars = r'[^\w\s.,!?;:\'"()\n-]'
+    disallowed_chars = r'[^\w\s.,!?;:\'"()/\n-]'
     cleaned_text = re.sub(disallowed_chars, "", text, flags=re.UNICODE)
     cleaned_text = " ".join(cleaned_text.split())
     return cleaned_text

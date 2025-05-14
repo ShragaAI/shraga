@@ -1,5 +1,6 @@
 import logging
 import traceback
+import uuid
 
 from fastapi import APIRouter, BackgroundTasks, HTTPException, Request
 from fastapi.responses import JSONResponse
@@ -46,6 +47,7 @@ async def run_flow(
         )
 
     req_body.question = clean_input(req_body.question)
+    req_body.uuid = str(uuid.uuid4())
     
     available_flows = list_flows_service.get_available_flows()
 
