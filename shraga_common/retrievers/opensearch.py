@@ -26,29 +26,25 @@ class OpenSearchRetriever(BaseSearchRetriever):
 
     @staticmethod
     def get_client(shraga_config, extra_configs: RetrieverConfig):
-        if not extra_configs:
-            extra_configs = {}
-        host = extra_configs.get("host")
-        port = extra_configs.get("port")
+        host = extra_configs.host
+        port = extra_configs.port
         use_ssl = True
 
         verify_certs = True
-        if extra_configs.get("use_ssl") is False:
-            use_ssl = False
+        if extra_configs.use_ssl is False:
+            use_ssl = extra_configs.use_ssl
         else:
-            verify_certs = (
-                extra_configs.get("verify_certs")
-                and extra_configs.get("verify_certs") is True
-            )
+            verify_certs = extra_configs.verify_certs
+            
 
-        auth_method = shraga_config.get("aws.auth_method", "basic")
+        auth_method = extra_configs.auth_method
         if auth_method == "aws":
             credentials = boto3.Session().get_credentials()
             region = shraga_config.get("aws.region") or "us-east-1"
             auth = AWSV4SignerAuth(credentials, region, "es")
         else:
-            http_auth_user = extra_configs.get("user")
-            http_auth_password = extra_configs.get("password")
+            http_auth_user = extra_configs.user
+            http_auth_password = extra_configs.password
             auth = (http_auth_user, http_auth_password)
 
         return OpenSearch(

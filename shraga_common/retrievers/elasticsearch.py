@@ -26,21 +26,17 @@ class ElasticsearchRetriever(BaseSearchRetriever):
 
     @staticmethod
     def get_client(shraga_config, extra_configs: RetrieverConfig):
-        use_cloud_id = extra_configs.get("use_cloud_id", "").lower() == "true"
-        cloud_id = extra_configs.get("cloud_id")
-        host = extra_configs.get("host")
-        port = extra_configs.get("port", 9200)
-        use_ssl = (
-            False
-            if extra_configs.get("use_ssl", False) in {False, "false", "False"}
-            else True
-        )
-        verify_certs = extra_configs.get("verify_certs", False)
+        use_cloud_id = extra_configs.use_cloud_id
+        cloud_id = extra_configs.cloud_id
+        host = extra_configs.host
+        port = extra_configs.port
+        use_ssl = extra_configs.use_ssl
+        verify_certs = extra_configs.verify_certs
 
         # Authentication method
-        auth_type = extra_configs.get("auth_type", "basic").lower()
+        auth_type = extra_configs.auth_type
         if auth_type == "apikey":
-            api_key = extra_configs.get("api_key")
+            api_key = extra_configs.api_key
             auth = {"api_key": api_key} if api_key else None
         else:  # default to basic auth
             http_auth_user = extra_configs.get("user")

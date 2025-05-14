@@ -1,13 +1,14 @@
-from typing import Optional
+from typing import Optional, Literal
 from pydantic import BaseModel
 class RetrieverConfig(BaseModel):
     type: str
-    auth_method: str
     host: str
     index: str
-    port: Optional[int] = None
+    port: int = 9200
+    auth_method: Optional[str] = None
+    auth_type: Optional[Literal["basic", "apikey"]] = "basic"
     user: Optional[str] = None
     password: Optional[str] = None
-    use_ssl: Optional[bool] = None
-    verify_certs: Optional[bool] = None
-    use_cloud_id: Optional[bool] = None
+    use_ssl: bool = False
+    verify_certs: bool = False
+    use_cloud_id: bool = False
