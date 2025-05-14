@@ -22,7 +22,7 @@ class OpenSearchRetriever(BaseSearchRetriever):
         # Retrieve configurations from environment variables
         config = RetrieverConfig(**self.config.get("retrievers.opensearch"))
         self.client = OpenSearchRetriever.get_client(shraga_config, config)
-        self.index_name = config.get("index")
+        self.index_name = config.index
 
     @staticmethod
     def get_client(shraga_config, extra_configs: RetrieverConfig):

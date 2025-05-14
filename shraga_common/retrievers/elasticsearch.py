@@ -22,7 +22,7 @@ class ElasticsearchRetriever(BaseSearchRetriever):
         super().__init__()
         config = RetrieverConfig(**shraga_config.get("retrievers.elasticsearch"))
         self.client = ElasticsearchRetriever.get_client(shraga_config, config)
-        self.index_name = config.get("index")
+        self.index_name = config.index
 
     @staticmethod
     def get_client(shraga_config, extra_configs: RetrieverConfig):
@@ -39,8 +39,8 @@ class ElasticsearchRetriever(BaseSearchRetriever):
             api_key = extra_configs.api_key
             auth = {"api_key": api_key} if api_key else None
         else:  # default to basic auth
-            http_auth_user = extra_configs.get("user")
-            http_auth_password = extra_configs.get("password")
+            http_auth_user = extra_configs.user
+            http_auth_password = extra_config.spassword
             auth = (
                 {"basic_auth": (http_auth_user, http_auth_password)}
                 if http_auth_user and http_auth_password

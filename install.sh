@@ -7,7 +7,11 @@ poetry cache clear pypi --all
 echo "Deleting poetry.lock file..."
 rm poetry.lock
 
-# Run poetry install without cache to ensure all dependencies are installed, including GitHub packages
+# Update all dependencies in pyproject.toml to latest versions
+echo "Updating Poetry dependencies to latest versions..."
+poetry update --no-cache
+
+# Run poetry install to ensure all dependencies are installed
 echo "Running Poetry install without cache..."
 poetry install --no-cache --no-root
 
