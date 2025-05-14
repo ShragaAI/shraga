@@ -20,7 +20,7 @@ class ElasticsearchRetriever(BaseSearchRetriever):
 
     def __init__(self, shraga_config: ShragaConfig):
         super().__init__()
-        config: RetrieverConfig = shraga_config.get("retrievers.elasticsearch")
+        config = RetrieverConfig(**shraga_config.get("retrievers.elasticsearch"))
         self.client = ElasticsearchRetriever.get_client(shraga_config, config)
         self.index_name = config.get("index")
 

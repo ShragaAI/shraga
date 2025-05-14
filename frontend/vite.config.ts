@@ -5,9 +5,6 @@ import { defineConfig } from "vite";
 export default ({ mode } : { mode: string }) => {
   return defineConfig({
     plugins: [react()],
-    optimizeDeps: {
-      include: ['@googlemaps/markerclusterer']
-    },
     server: {
       port: 5000,
       proxy: {
