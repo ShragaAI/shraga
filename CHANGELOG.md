@@ -1,6 +1,16 @@
 # CHANGELOG
 
 
+## v0.1.9 (2025-05-14)
+
+### Bug Fixes
+
+- Add cohere embeddings ([#26](https://github.com/ShragaAI/shraga/pull/26),
+  [`cba6733`](https://github.com/ShragaAI/shraga/commit/cba6733608fdb285acc48ff6098c7ede98d96e15))
+
+Co-authored-by: Dinor Nagar <dinornagar@Dinors-MacBook-Air.local>
+
+
 ## v0.1.8 (2025-05-05)
 
 ### Bug Fixes
