@@ -164,6 +164,7 @@ async def log_user_message(request: Request, request_body: FlowRunApiRequest):
         "user",
         request,
         {
+            "uuid": request_body.uuid,
             "chat_id": request_body.chat_id,
             "flow_id": request_body.flow_id,
             "text": request_body.question,
@@ -186,6 +187,7 @@ async def log_system_message(
         "system",
         request,
         {
+            "uuid": request_body.uuid,
             "chat_id": request_body.chat_id,
             "flow_id": request_body.flow_id,
             "text": response.response_text,
