@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.1.12 (2025-05-14)
+
+### Bug Fixes
+
+- Retrieverconfig
+  ([`af07d2f`](https://github.com/ShragaAI/shraga/commit/af07d2fcf96948b7ecb80cac0dc7e183bf8dd6f6))
+
+
 ## v0.1.11 (2025-05-14)
 
 ### Bug Fixes
