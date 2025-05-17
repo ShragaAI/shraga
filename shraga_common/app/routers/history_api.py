@@ -9,12 +9,18 @@ from ..utils import non_ok_response, ok_response
 router = APIRouter()
 
 
-@router.get("/", response_model=List[Chat])
-async def get_history(request: Request) -> List[Chat]:
+@router.get("/list", response_model=List[Chat])
+async def get_chat_list(request: Request) -> List[Chat]:
     if not request.user.display_name:
         return []
-    return await history_service.get_history(request.user.display_name)
+    return await history_service.get_chat_list(request.user.display_name)
 
+@router.get("/{chat_id}/messages")
+async def get_chat_messages(chat_id: str) -> List[dict]:
+    messages = await history_service.get_chat_messages(chat_id)
+    if not messages:
+        raise HTTPException(status_code=404, detail="Chat messages not found")
+    return messages
 
 @router.get("/{chat_id}", response_model=Chat)
 async def get_chat(chat_id: str) -> Chat:
