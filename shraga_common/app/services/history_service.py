@@ -18,8 +18,8 @@ from .get_history_client import get_history_client
 logger = logging.getLogger(__name__)
 
 
-async def get_history(
-    user_id: Optional[str], 
+async def get_chat_list(
+    user_id: str, 
     start: Optional[str] = None, 
     end: Optional[str] = None
 ) -> List[Chat]:
@@ -28,17 +28,16 @@ async def get_history(
         client, index = get_history_client(shraga_config)
         if not client:
             return []
-
+        
         filters = []
         chat_list_length = 50
 
         if user_id:
             filters.append({"term": {"user_id": user_id}})
             chat_list_length = 10
+            
         if start:
-            filters.append(
-                {"range": {"timestamp": {"gte": start, "lte": end or "now"}}}
-            )
+            filters.append({"range": {"timestamp": {"gte": start, "lte": end or "now"}}})
 
         if is_prod_env() and not user_id:
             filters.append({"term": {"config.prod": True}})
@@ -63,29 +62,61 @@ async def get_history(
                     "aggs": {
                         "latest": {
                             "top_hits": {
-                                "size": 100,
-                                "sort": [{"timestamp": {"order": "desc"}}],
+                                "size": 1,
+                                "sort": [{"timestamp": {"order": "asc"}}]
                             }
                         },
-                        "first_message": {"min": {"field": "timestamp"}},
-                    },
+                        "first_message": {"min": {"field": "timestamp"}}
+                    }
                 }
-            },
+            }
         }
 
         response = client.search(
             index=index,
             body=query,
         )
+        
         hits = _.get(response, "aggregations.by_chat.buckets") or []
         return [Chat.from_hit(hit) for hit in hits]
-    except NotFoundError:
-        logger.error("Error retrieving history (index not found)")
-        return []
-    except Exception as e:
-        logger.exception("Error retrieving history", exc_info=e)
-        return []
 
+    except Exception as e:
+        logger.exception("Error retrieving chat list", exc_info=e)
+        return []
+        
+
+async def get_chat_messages(chat_id: str) -> List[ChatMessage]:
+    try:
+        shraga_config = get_config()
+        client, index = get_history_client(shraga_config)
+        if not client:
+            return []
+            
+        query = {
+            "query": {
+                "bool": {
+                    "must": [
+                        {"term": {"chat_id": chat_id}},
+                        {"terms": {"msg_type": ["user", "system"]}}
+                    ]
+                }
+            },
+            "sort": [{"timestamp": {"order": "asc"}}],
+            "size": 100
+        }
+        
+        response = client.search(
+            index=index,
+            body=query,
+        )
+        
+        hits = response.get("hits", {}).get("hits", [])
+        return [hit["_source"] for hit in hits]
+    
+    except Exception as e:
+        logger.exception("Error retrieving chat messages for chat %s", chat_id, exc_info=e)
+        return []
+        
 
 async def get_chat(chat_id: str) -> Optional[Chat]:
     shraga_config = get_config()
