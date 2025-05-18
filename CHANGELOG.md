@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.1.13 (2025-05-18)
+
+### Performance Improvements
+
+- Optimize chat history loading ([#28](https://github.com/ShragaAI/shraga/pull/28),
+  [`1926ca7`](https://github.com/ShragaAI/shraga/commit/1926ca7ec9db798139e01712ed77f46dd26fb15f))
+
+
 ## v0.1.12 (2025-05-14)
 
 ### Bug Fixes
