@@ -34,7 +34,6 @@ async def get_chat_list(
 
         if user_id:
             filters.append({"term": {"user_id": user_id}})
-            chat_list_length = 10
             
         if start:
             filters.append({"range": {"timestamp": {"gte": start, "lte": end or "now"}}})
@@ -57,16 +56,23 @@ async def get_chat_list(
                     "terms": {
                         "field": "chat_id",
                         "size": chat_list_length,
-                        "order": {"first_message": "desc"},
+                        "order": {"last_message": "desc"},  # Sort by last message timestamp
                     },
                     "aggs": {
+                        "last_message": {"max": {"field": "timestamp"}},  # Get last message timestamp
+                        "first_message": {"min": {"field": "timestamp"}},  # Keep first message timestamp
+                        "first": {
+                            "top_hits": {
+                                "size": 1,
+                                "sort": [{"timestamp": {"order": "asc"}}]  # Get first message
+                            }
+                        },
                         "latest": {
                             "top_hits": {
                                 "size": 1,
-                                "sort": [{"timestamp": {"order": "asc"}}]
+                                "sort": [{"timestamp": {"order": "desc"}}]  # Get last message
                             }
-                        },
-                        "first_message": {"min": {"field": "timestamp"}}
+                        }
                     }
                 }
             }
@@ -101,8 +107,8 @@ async def get_chat_messages(chat_id: str) -> List[ChatMessage]:
                     ]
                 }
             },
-            "sort": [{"timestamp": {"order": "asc"}}],
-            "size": 100
+            "sort": [{"timestamp": {"order": "desc"}}],
+            "size": 1000
         }
         
         response = client.search(
@@ -111,7 +117,10 @@ async def get_chat_messages(chat_id: str) -> List[ChatMessage]:
         )
         
         hits = response.get("hits", {}).get("hits", [])
-        return [hit["_source"] for hit in hits]
+        # Convert hits to messages and reverse to get ascending order (oldest first)
+        messages = [ChatMessage.from_hit(hit) for hit in hits]
+        messages.reverse()  # Reverse to get ascending order
+        return messages
     
     except Exception as e:
         logger.exception("Error retrieving chat messages for chat %s", chat_id, exc_info=e)

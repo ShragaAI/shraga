@@ -24,6 +24,11 @@ class ChatMessage(BaseModel):
     trace: Optional[dict] = None
     traceback: Optional[str] = None
 
+    @staticmethod
+    def from_hit(hit: dict):
+        source = hit.get("_source", {})
+        return ChatMessage(**source)
+
 
 class Chat(BaseModel):
     chat_id: str
@@ -36,16 +41,15 @@ class Chat(BaseModel):
 
     @staticmethod
     def from_hit(hit: dict):
-        messages = sorted(
-            _.get(hit, "latest.hits.hits", []), key=lambda x: x["_source"]["timestamp"]
-        )
+        first_message = _.get(hit, "first.hits.hits[0]._source", {})
+        last_message = _.get(hit, "latest.hits.hits[0]._source", {})
 
-        latest_message = messages[0]["_source"] if messages else {}
-        chat = Chat(
+        return Chat(
             chat_id=hit.get("key"),
-            timestamp=latest_message.get("timestamp"),
-            messages=[ChatMessage(**x["_source"]) for x in messages],
-            user_id=latest_message.get("user_id"),
-            flow_id=latest_message.get("flow_id"),
+            timestamp=last_message.get("timestamp"),  # Use last message timestamp
+            first_message=_.get(hit, "first_message.value"),
+            last_message=_.get(hit, "last_message.value"),
+            messages=[ChatMessage(**first_message)] if first_message else [],
+            user_id=first_message.get("user_id"),
+            flow_id=first_message.get("flow_id"),
         )
-        return chat

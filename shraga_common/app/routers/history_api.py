@@ -2,7 +2,7 @@ from typing import List
 
 from fastapi import APIRouter, HTTPException, Request
 
-from ..models import Chat, FeedbackRequest
+from ..models import Chat, FeedbackRequest, ChatMessage
 from ..services import history_service
 from ..utils import non_ok_response, ok_response
 
@@ -16,7 +16,7 @@ async def get_chat_list(request: Request) -> List[Chat]:
     return await history_service.get_chat_list(request.user.display_name)
 
 @router.get("/{chat_id}/messages")
-async def get_chat_messages(chat_id: str) -> List[dict]:
+async def get_chat_messages(chat_id: str) -> List[ChatMessage]:
     messages = await history_service.get_chat_messages(chat_id)
     if not messages:
         raise HTTPException(status_code=404, detail="Chat messages not found")
