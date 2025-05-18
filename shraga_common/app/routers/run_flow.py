@@ -1,6 +1,6 @@
 import logging
 import traceback
-import uuid
+from nanoid import generate as nanoid
 
 from fastapi import APIRouter, BackgroundTasks, HTTPException, Request
 from fastapi.responses import JSONResponse
@@ -47,7 +47,7 @@ async def run_flow(
         )
 
     req_body.question = clean_input(req_body.question)
-    req_body.uuid = str(uuid.uuid4())
+    req_body.msg_id = nanoid(size=12)
     
     available_flows = list_flows_service.get_available_flows()
 

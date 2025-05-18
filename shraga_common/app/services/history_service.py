@@ -150,6 +150,7 @@ async def log_feedback(request: Request, request_body: FeedbackRequest) -> bool:
         "feedback",
         request,
         {
+            "msg_id": request_body.msg_id,
             "chat_id": request_body.chat_id,
             "flow_id": request_body.flow_id,
             "text": request_body.feedback_text,
@@ -164,7 +165,7 @@ async def log_user_message(request: Request, request_body: FlowRunApiRequest):
         "user",
         request,
         {
-            "uuid": request_body.uuid,
+            "msg_id": request_body.msg_id,
             "chat_id": request_body.chat_id,
             "flow_id": request_body.flow_id,
             "text": request_body.question,
@@ -187,7 +188,7 @@ async def log_system_message(
         "system",
         request,
         {
-            "uuid": request_body.uuid,
+            "msg_id": request_body.msg_id,
             "chat_id": request_body.chat_id,
             "flow_id": request_body.flow_id,
             "text": response.response_text,
@@ -205,6 +206,7 @@ async def log_flow(request: Request, request_body: FlowRunApiRequest, stat: Flow
         "flow_stats",
         request,
         {
+            "msg_id": request_body.msg_id,
             "chat_id": request_body.chat_id,
             "text": request_body.question,
             "flow_id": stat.flow_id,
@@ -220,6 +222,7 @@ async def log_error_message(
         "error",
         request,
         {
+            "msg_id": request_body.msg_id,
             "chat_id": request_body.chat_id,
             "flow_id": request_body.flow_id,
             "text": str(error),

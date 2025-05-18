@@ -7,4 +7,4 @@ class FlowRunApiRequest(FlowRunRequest):
     flow_id: str
     chat_id: Optional[str] = None
     position: Optional[int] = None
-    uuid: Optional[str] = None
+    msg_id: Optional[str] = None

@@ -21,7 +21,7 @@ class LocalRetriever:
         Args:
             path (str): Folder's full path.
             verbose (bool): Add prints.
-            file_type (json \ zip): Type of files to load.
+            file_type (json \\ zip): Type of files to load.
 
         Returns:
             dict: Parsed json data by relevant keys.

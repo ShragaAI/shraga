@@ -11,7 +11,7 @@ class ChatMessage(BaseModel):
     timestamp: datetime
     chat_id: str
     flow_id: str
-    uuid: Optional[str] = None
+    msg_id: Optional[str] = None
     text: Optional[str] = None
     user_id: Optional[str] = None
     msg_type: Literal["user", "system", "feedback", "flow_stats", "error"]
