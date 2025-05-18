@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.1.15 (2025-05-18)
+
+### Bug Fixes
+
+- History
+  ([`198de66`](https://github.com/ShragaAI/shraga/commit/198de660748a3fb42ade7b27cf43a5cd463e19ab))
+
+
 ## v0.1.14 (2025-05-18)
 
 ### Bug Fixes
