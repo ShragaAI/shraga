@@ -1,6 +1,28 @@
 # CHANGELOG
 
 
+## v0.1.14 (2025-05-18)
+
+### Bug Fixes
+
+- Add msg_id to user and system chat messages ([#27](https://github.com/ShragaAI/shraga/pull/27),
+  [`8adb57c`](https://github.com/ShragaAI/shraga/commit/8adb57c68f5b022984d598b6a89720ab3ec8d342))
+
+* chore: add uuid to user and system chat messages
+
+* fix: msg_id
+
+* chore: feedback
+
+* perf: optimize chat history loading (#28)
+
+* msg_id
+
+---------
+
+Co-authored-by: Liza Katz <lizka.k@gmail.com>
+
+
 ## v0.1.13 (2025-05-18)
 
 ### Performance Improvements
