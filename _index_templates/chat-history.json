@@ -44,6 +44,9 @@
         "user_id": {
           "type": "keyword"
         },
+        "msg_id": {
+          "type": "keyword"
+        },
         "flow_id": {
           "type": "keyword"
         },
