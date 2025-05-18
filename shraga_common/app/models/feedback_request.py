@@ -4,6 +4,7 @@ from pydantic import BaseModel
 
 
 class FeedbackRequest(BaseModel):
+    msg_id: str
     chat_id: str
     flow_id: str
     user_id: str
