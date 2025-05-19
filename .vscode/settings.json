@@ -9,4 +9,13 @@
     "python.testing.pytestEnabled": false,
     "python.testing.unittestEnabled": true,
     "notebook.output.wordWrap": "on",
+    "pylint.args": [
+        "--disable=missing-docstring",
+        "--disable=invalid-name",
+        "--disable=too-many-arguments",
+        "--disable=too-many-locals",
+        "--disable=too-many-statements",
+        "--disable=too-few-public-methods",
+        "--disable=consider-using-with"
+    ],
 }

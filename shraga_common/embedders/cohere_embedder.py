@@ -1,9 +1,6 @@
 import json
 import logging
-from typing import Any, Dict, Optional, Tuple, Union
-
-import boto3
-from boto3.exceptions import Boto3Error
+from typing import Any, Optional
 
 from shraga_common import ShragaConfig
 
@@ -66,8 +63,6 @@ class CohereEmbedder(BaseEmbedder):
                 return v
             else:
                 raise LLMServiceUnavailableException("Unexpected embedding format")
-        except Boto3Error as e:
-            raise LLMServiceUnavailableException("Bedrock error", e)
         except json.JSONDecodeError as e:
             raise LLMServiceUnavailableException("Failed to decode embedding", e)
         except Exception as e:
