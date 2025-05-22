@@ -2,7 +2,7 @@ import logging
 from abc import abstractmethod
 from typing import List, Literal, Optional, get_args
 
-from ..logging import init_logging
+from shraga_common.logging import init_logging
 from ..shraga_config import ShragaConfig
 from .flow_response import FlowResponse
 from .flow_run_request import FlowRunRequest

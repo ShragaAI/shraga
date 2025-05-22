@@ -8,7 +8,7 @@ from fastapi.responses import JSONResponse
 from shraga_common.models import FlowBase, FlowResponse
 
 from ..config import get_config
-from ..exceptions import RequestCancelledException, LLMServiceUnavailableException
+from shraga_common import RequestCancelledException, LLMServiceUnavailableException
 from ..models import FlowRunApiRequest
 from .request_utils import execute_cancellable_flow
 from ..services import history_service, list_flows_service

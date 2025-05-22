@@ -5,7 +5,7 @@ import subprocess
 from user_agents import parse
 
 from ..shraga_config import ShragaConfig
-from ..app.utils import is_prod_env
+from shraga_common.utils import is_prod_env
 
 
 def get_git_commit():

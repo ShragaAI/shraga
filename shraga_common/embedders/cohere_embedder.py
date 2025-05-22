@@ -4,7 +4,7 @@ from typing import Any, Optional
 
 from shraga_common import ShragaConfig
 
-from ..app.exceptions import LLMServiceUnavailableException
+from shraga_common.exceptions import LLMServiceUnavailableException
 from .base_embedder import BaseEmbedder, BaseEmbedderGenerateOptions
 
 import cohere

@@ -6,10 +6,8 @@ from typing import List, Literal, Optional, TypedDict
 import boto3
 import botocore
 
-from shraga_common import ShragaConfig
-
-from ..app.exceptions import LLMServiceUnavailableException
-from ..models import FlowStats
+from shraga_common import ShragaConfig, LLMServiceUnavailableException
+from shraga_common.models import FlowStats
 from ..utils import safe_to_int
 from .common import LLMModelResponse
 from .llm_service import LLMService, LLMServiceOptions

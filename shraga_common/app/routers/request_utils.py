@@ -6,7 +6,7 @@ from fastapi import Request
 
 from shraga_common.models import FlowBase, FlowResponse
 
-from ..exceptions import RequestCancelledException, LLMServiceUnavailableException
+from shraga_common import RequestCancelledException, LLMServiceUnavailableException
 from ..models import FlowRunApiRequest
 
 logger = logging.getLogger(__name__)

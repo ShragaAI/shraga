@@ -4,7 +4,7 @@ from abc import abstractmethod
 from datetime import datetime
 from typing import List, Optional
 
-from shraga_common.app import RequestCancelledException, LLMServiceUnavailableException
+from shraga_common import RequestCancelledException, LLMServiceUnavailableException
 from shraga_common.models import (FlowBase, FlowResponse, FlowRunRequest,
                                   HistoryMessage)
 from shraga_common.services import (BedrockService, LLMService,
