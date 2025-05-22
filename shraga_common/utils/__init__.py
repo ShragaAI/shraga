@@ -4,6 +4,7 @@ from .html_chunker import HtmlChunker
 from .ingest import IngestUtils
 from .parsers import BedrockParser, extract_xml_section
 from .typing import safe_to_int
+from .is_prod_env import is_prod_env
 
 __all__ = [
     "BedrockParser",
@@ -15,4 +16,5 @@ __all__ = [
     "safe_to_int",
     "normalize_url",
     "extract_xml_section",
+    "is_prod_env",
 ]

@@ -5,9 +5,7 @@ from typing import Any, Dict, Optional, Tuple, Union
 import boto3
 from boto3.exceptions import Boto3Error
 
-from shraga_common import ShragaConfig
-
-from ..app.exceptions import LLMServiceUnavailableException
+from shraga_common import ShragaConfig, LLMServiceUnavailableException
 from .base_embedder import BaseEmbedder, BaseEmbedderGenerateOptions
 
 # Configure logging

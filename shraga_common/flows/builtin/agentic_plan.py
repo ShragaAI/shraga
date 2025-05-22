@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Optional
 
 from shraga_common import ShragaConfig
-from shraga_common.app import RequestCancelledException, LLMServiceUnavailableException
+from shraga_common import RequestCancelledException, LLMServiceUnavailableException
 from shraga_common.models import FlowResponse, FlowRunRequest
 from shraga_common.services import LLMServiceOptions
 

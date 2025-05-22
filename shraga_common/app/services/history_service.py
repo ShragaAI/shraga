@@ -10,7 +10,7 @@ from shraga_common.logging import (get_config_info, get_platform_info,
                                    get_user_agent_info)
 from shraga_common.models import FlowResponse, FlowStats
 
-from ..utils import is_prod_env
+from shraga_common.utils import is_prod_env
 from ..config import get_config
 from ..models import Chat, ChatMessage, FeedbackRequest, FlowRunApiRequest
 from .get_history_client import get_history_client

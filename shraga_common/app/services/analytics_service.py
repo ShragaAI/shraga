@@ -3,7 +3,7 @@ import logging
 from opensearchpy import NotFoundError
 from pydash import _
 
-from ..utils import is_prod_env
+from shraga_common.utils import is_prod_env
 from ..config import get_config
 from ..models import AnalyticsRequest
 from .get_history_client import get_history_client

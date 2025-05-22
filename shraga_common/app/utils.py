@@ -27,6 +27,3 @@ def clean_input(text: str) -> str:
     cleaned_text = re.sub(disallowed_chars, "", text, flags=re.UNICODE)
     cleaned_text = " ".join(cleaned_text.split())
     return cleaned_text
-
-def is_prod_env() -> bool:
-    return os.environ.get("PROD", "").lower() == "true"

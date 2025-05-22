@@ -1,6 +1,6 @@
 import asyncio
 
-from shraga_common.app import RequestCancelledException
+from shraga_common import RequestCancelledException
 from shraga_common.models import (FlowBase, FlowResponse, FlowRunRequest,
                                   RetrievalResult)
 
