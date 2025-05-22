@@ -17,10 +17,7 @@ async def get_chat_list(request: Request) -> List[Chat]:
 
 @router.get("/{chat_id}/messages")
 async def get_chat_messages(chat_id: str) -> List[ChatMessage]:
-    messages = await history_service.get_chat_messages(chat_id)
-    if not messages:
-        raise HTTPException(status_code=404, detail="Chat messages not found")
-    return messages
+    return await history_service.get_chat_messages(chat_id)
 
 @router.get("/{chat_id}", response_model=Chat)
 async def get_chat(chat_id: str) -> Chat:
