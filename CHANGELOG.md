@@ -1,6 +1,23 @@
 # CHANGELOG
 
 
+## v0.1.16 (2025-05-22)
+
+### Bug Fixes
+
+- Resolve circular imports ([#30](https://github.com/ShragaAI/shraga/pull/30),
+  [`1fe6e69`](https://github.com/ShragaAI/shraga/commit/1fe6e6984061be03c3f108b650b1f350decc1a7c))
+
+- Return empty array of messages instead of code 404
+  ([#29](https://github.com/ShragaAI/shraga/pull/29),
+  [`2691823`](https://github.com/ShragaAI/shraga/commit/269182348e211323b27f7d5e47bc56ab10866db9))
+
+### Chores
+
+- Cohere embed import
+  ([`2429e23`](https://github.com/ShragaAI/shraga/commit/2429e23900798ace9038a25dd210e897a080fd01))
+
+
 ## v0.1.15 (2025-05-18)
 
 ### Bug Fixes
