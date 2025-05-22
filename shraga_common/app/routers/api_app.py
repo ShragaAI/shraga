@@ -140,6 +140,7 @@ def load_api_app():
     @api_app.get("/ui/configs")
     async def ui_configs() -> dict:
         d = get_config("ui")
+        d["history_enabled"] = get_config("history.enabled")
         d["map_api"] = get_config("services.googlemaps")
         d["input_max_length"] = get_config("flows.input_max_length")
         d["build"] = os.getenv("SHRAGA_BUILD_TAG")
