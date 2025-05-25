@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.2.0 (2025-05-25)
+
+### Features
+
+- Add history enable field to config for FE ([#31](https://github.com/ShragaAI/shraga/pull/31),
+  [`657f8bd`](https://github.com/ShragaAI/shraga/commit/657f8bda20002ab7758d5a6a0577523c862f23e5))
+
+
 ## v0.1.16 (2025-05-22)
 
 ### Bug Fixes
