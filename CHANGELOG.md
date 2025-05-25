@@ -1,6 +1,16 @@
 # CHANGELOG
 
 
+## v0.2.1 (2025-05-25)
+
+### Bug Fixes
+
+- Add extra param to request ([#33](https://github.com/ShragaAI/shraga/pull/33),
+  [`17956d5`](https://github.com/ShragaAI/shraga/commit/17956d51288d9e2bbf01a3256379d5762d625adc))
+
+Co-authored-by: Dinor Nagar <dinornagar@Dinors-MacBook-Air.local>
+
+
 ## v0.2.0 (2025-05-25)
 
 ### Features
