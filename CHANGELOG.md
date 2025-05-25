@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.2.2 (2025-05-25)
+
+### Bug Fixes
+
+- Git history disabled by default
+  ([`5cf46c6`](https://github.com/ShragaAI/shraga/commit/5cf46c626676a80aa10bf9bdca65d3af9297a049))
+
+
 ## v0.2.1 (2025-05-25)
 
 ### Bug Fixes
