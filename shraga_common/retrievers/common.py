@@ -3,8 +3,8 @@ from pydantic import BaseModel
 class RetrieverConfig(BaseModel):
     type: str
     host: str
-    index: str
     port: int = 9200
+    index: Optional[str] = None
     auth_method: Optional[str] = None
     auth_type: Optional[Literal["basic", "apikey"]] = "basic"
     user: Optional[str] = None
