@@ -10,7 +10,7 @@ class HistoryMessage(BaseModel):
     text: str
     msg_type: Literal["system", "user"]
     timestamp: Optional[str] = None
-
+    query: Optional[str] = None
 
 class FlowRunRequest(BaseModel, Generic[T]):
     question: Optional[str] = None
