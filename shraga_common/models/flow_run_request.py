@@ -1,4 +1,4 @@
-from typing import Generic, List, Literal, Optional, TypeVar
+from typing import Generic, List, Literal, Optional, TypeVar, Dict
 
 from pydantic import BaseModel, Field
 
@@ -10,6 +10,7 @@ class HistoryMessage(BaseModel):
     text: str
     msg_type: Literal["system", "user"]
     timestamp: Optional[str] = None
+    extra: Optional[Dict] = None
 
 
 class FlowRunRequest(BaseModel, Generic[T]):
