@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.2.3 (2025-05-25)
+
+### Bug Fixes
+
+- Make index optional in os \ es connection
+  ([`081294d`](https://github.com/ShragaAI/shraga/commit/081294d96e09abff42ce43164c8d7571b88002dc))
+
+
 ## v0.2.2 (2025-05-25)
 
 ### Bug Fixes
