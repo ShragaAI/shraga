@@ -1,6 +1,19 @@
 # CHANGELOG
 
 
+## v0.2.4 (2025-05-25)
+
+### Bug Fixes
+
+- Get_chat_messages count param
+  ([`a6eca56`](https://github.com/ShragaAI/shraga/commit/a6eca56fcaf2a83812743c31b3cb0c8d20de8074))
+
+### Chores
+
+- Bump
+  ([`ad526e1`](https://github.com/ShragaAI/shraga/commit/ad526e16f576ad2c303e99a414fe0bd851990d34))
+
+
 ## v0.2.3 (2025-05-25)
 
 ### Bug Fixes
