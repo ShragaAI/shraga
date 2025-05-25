@@ -91,7 +91,7 @@ async def get_chat_list(
         return []
         
 
-async def get_chat_messages(chat_id: str) -> List[ChatMessage]:
+async def get_chat_messages(chat_id: str, count: int = 1000) -> List[ChatMessage]:
     try:
         shraga_config = get_config()
         client, index = get_history_client(shraga_config)
@@ -108,7 +108,7 @@ async def get_chat_messages(chat_id: str) -> List[ChatMessage]:
                 }
             },
             "sort": [{"timestamp": {"order": "desc"}}],
-            "size": 1000
+            "size": count
         }
         
         response = client.search(
