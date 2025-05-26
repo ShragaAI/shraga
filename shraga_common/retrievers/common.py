@@ -9,6 +9,6 @@ class RetrieverConfig(BaseModel):
     auth_type: Optional[Literal["basic", "apikey"]] = "basic"
     user: Optional[str] = None
     password: Optional[str] = None
-    use_ssl: bool = False
+    use_ssl: bool = True
     verify_certs: bool = False
     use_cloud_id: bool = False

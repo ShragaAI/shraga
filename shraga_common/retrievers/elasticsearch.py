@@ -40,7 +40,7 @@ class ElasticsearchRetriever(BaseSearchRetriever):
             auth = {"api_key": api_key} if api_key else None
         else:  # default to basic auth
             http_auth_user = extra_configs.user
-            http_auth_password = extra_config.spassword
+            http_auth_password = extra_configs.password
             auth = (
                 {"basic_auth": (http_auth_user, http_auth_password)}
                 if http_auth_user and http_auth_password
