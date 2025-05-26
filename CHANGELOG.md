@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.2.5 (2025-05-26)
+
+### Bug Fixes
+
+- Use ssl by default!
+  ([`4a80aba`](https://github.com/ShragaAI/shraga/commit/4a80aba637a8acd0d5d9d71322d338e4c3ae4b0d))
+
+
 ## v0.2.4 (2025-05-25)
 
 ### Bug Fixes
