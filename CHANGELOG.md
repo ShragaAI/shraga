@@ -1,6 +1,24 @@
 # CHANGELOG
 
 
+## v0.2.6 (2025-05-27)
+
+### Bug Fixes
+
+- Auth security improvements ([#34](https://github.com/ShragaAI/shraga/pull/34),
+  [`a57d2f3`](https://github.com/ShragaAI/shraga/commit/a57d2f3eb0f065cfb916cfa470f7a8f3b4337ad5))
+
+* fix: - store password hashes - create basic auth user - improve basic auth backend (still supports
+  raw password for backwards compatibility)
+
+* chore: use ordered dicts
+
+### Chores
+
+- Split out auth providers
+  ([`5f0d376`](https://github.com/ShragaAI/shraga/commit/5f0d376ee7fae29ed30d964c862a80201ed0f94d))
+
+
 ## v0.2.5 (2025-05-26)
 
 ### Bug Fixes
