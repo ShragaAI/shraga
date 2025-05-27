@@ -42,8 +42,14 @@ Several command-line tools are included with this package to help with developme
 ### User Management
 
 ```bash
-# Create a user with basic authentication
+# Create a user with basic authentication (interactive mode)
 poetry run create-basic-auth-user
+
+# Create a user with command-line arguments
+poetry run create-basic-auth-user <email> <password> <config_file>
+
+# Example
+poetry run create-basic-auth-user user@example.com mypassword123 config.demo.yaml
 ```
 This tool will:
 - Prompt you to enter a user email address (with validation)
