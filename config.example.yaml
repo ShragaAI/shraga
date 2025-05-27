@@ -1,6 +1,5 @@
 server:
   port: 8000
-
 ui:
   enabled: true
   name: Shraga
@@ -8,10 +7,9 @@ ui:
   default_flow: default
   list_flows: true
   loading_messages:
-    - Looking up relevant information
-    - Compiling analysis and sources
-    - Generating answer
-
+  - Looking up relevant information
+  - Compiling analysis and sources
+  - Generating answer
 retrievers:
   opensearch:
     type: opensearch
@@ -23,21 +21,19 @@ retrievers:
     auth_method: ${OPENSEARCH_AUTH_METHOD}
     user: ${OPENSEARCH_USER}
     password: ${OPENSEARCH_PASSWORD}
-
   elasticsearch:
     type: elasticsearch
-    use_cloud_id: ${ELASTICSEARCH_USE_CLOUD_ID} # true or false
-    cloud_id: ${ELASTICSEARCH_CLOUD_ID} # when use_cloud_id
-    host: ${ELASTICSEARCH_HOST} # when not use_cloud_id
-    port: ${ELASTICSEARCH_PORT} # when not use_cloud_id
+    use_cloud_id: ${ELASTICSEARCH_USE_CLOUD_ID}
+    cloud_id: ${ELASTICSEARCH_CLOUD_ID}
+    host: ${ELASTICSEARCH_HOST}
+    port: ${ELASTICSEARCH_PORT}
     use_ssl: ${ELASTICSEARCH_USE_SSL}
     verify_certs: ${ELASTICSEARCH_VERIFY_CERTS}
-    auth_type: ${ELASTICSEARCH_AUTH_TYPE} # basic or apikey
-    user: ${ELASTICSEARCH_USER} # when auth_type is basic
-    password: ${ELASTICSEARCH_PASSWORD} # when auth_type is basic
-    api_key: ${ELASTICSEARCH_API_KEY} # when auth_type is apikey
+    auth_type: ${ELASTICSEARCH_AUTH_TYPE}
+    user: ${ELASTICSEARCH_USER}
+    password: ${ELASTICSEARCH_PASSWORD}
+    api_key: ${ELASTICSEARCH_API_KEY}
     index: ${ELASTICSEARCH_INDEX}
-
 services:
   openai:
     api_key: ${OPENAI_API_KEY}
@@ -45,35 +41,29 @@ services:
     api_key: ${GOOGLE_MAPS_KEY}
     dark_map_id: ${GOOGLE_MAPS_DARK_MAP_ID}
     light_map_id: ${GOOGLE_MAPS_LIGHT_MAP_ID}
-
 auth:
   users:
-    - user@domain.com
+  - user@domain.com
   realms:
     basic:
-      - user@domain.com:secretpwd
+    - user@domain.com:secretpwd
     jwt:
       secret: foobar
-    google:  
+    google:
       client_id: ${GOOGLE_CLIENT_ID}
       client_secret: ${GOOGLE_CLIENT_SECRET}
-    microsoft:  
+    microsoft:
       client_id: ${MICROSOFT_CLIENT_ID}
       client_secret: ${MICROSOFT_CLIENT_SECRET}
-
 aws:
-  #profile:
-  #region: ${AWS_REGION}
   access_key_id: ${AWS_ACCESS_KEY_ID}
   secret_access_key: ${AWS_SECRET_ACCESS_KEY}
   assets_bucket: mybucket
-
 history:
   enabled: true
   index: chat-history
-  analytics: 
+  analytics:
     domains:
-      - bigdataboutique.com
-
+    - bigdataboutique.com
 flows:
   input_max_length: 1000

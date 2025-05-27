@@ -3,7 +3,6 @@ import os
 import sys
 import getpass
 import bcrypt
-import yaml
 import re
 
 def validate_email(email):
@@ -57,14 +56,51 @@ def save_credentials(email, password, password_hash):
 def update_config_file(email, password_hash, config_file):
     """Update the config file with the new user."""
     try:
-        # Load YAML content
-        with open(config_file, 'r', encoding='utf-8') as f:
-            config_content = f.read()
-            config = yaml.safe_load(config_content)
+        # Use PyYAML with ordered dictionaries to maintain field order
+        import yaml
+        from collections import OrderedDict
         
-        # Add user to auth users list if not already there
+        # Configure PyYAML to use OrderedDict for mappings
+        def ordered_yaml_load(stream):
+            class OrderedLoader(yaml.SafeLoader):
+                pass
+            
+            def construct_mapping(loader, node):
+                loader.flatten_mapping(node)
+                return OrderedDict(loader.construct_pairs(node))
+                
+            OrderedLoader.add_constructor(
+                yaml.resolver.Resolver.DEFAULT_MAPPING_TAG,
+                construct_mapping)
+            return yaml.load(stream, OrderedLoader)
+        
+        def ordered_yaml_dump(data, stream):
+            class OrderedDumper(yaml.SafeDumper):
+                pass
+                
+            def _dict_representer(dumper, data):
+                return dumper.represent_mapping(
+                    yaml.resolver.Resolver.DEFAULT_MAPPING_TAG,
+                    data.items())
+                    
+            OrderedDumper.add_representer(OrderedDict, _dict_representer)
+            return yaml.dump(data, stream, OrderedDumper, default_flow_style=False)
+        
+        # Load YAML content with order preserved
+        with open(config_file, 'r', encoding='utf-8') as f:
+            config = ordered_yaml_load(f)
+            
+        # Convert to OrderedDict if not already
+        if not isinstance(config, OrderedDict):
+            config = OrderedDict(config)
+            
+        # Ensure auth section is an OrderedDict
         if 'auth' not in config:
-            config['auth'] = {}
+            config['auth'] = OrderedDict()
+        elif not isinstance(config['auth'], OrderedDict):
+            config['auth'] = OrderedDict(config['auth'])
+            
+        # Add user to auth users list if not already
         if 'users' not in config['auth']:
             config['auth']['users'] = []
         if email not in config['auth']['users']:
@@ -72,7 +108,10 @@ def update_config_file(email, password_hash, config_file):
         
         # Add user to basic realm
         if 'realms' not in config['auth']:
-            config['auth']['realms'] = {}
+            config['auth']['realms'] = OrderedDict()
+        elif not isinstance(config['auth']['realms'], OrderedDict):
+            config['auth']['realms'] = OrderedDict(config['auth']['realms'])
+            
         if 'basic' not in config['auth']['realms']:
             config['auth']['realms']['basic'] = []
         
@@ -85,65 +124,12 @@ def update_config_file(email, password_hash, config_file):
         # Add new entry
         config['auth']['realms']['basic'].append(f"{email}:{password_hash}")
         
-        # Write back to file with minimal changes
-        with open(config_file, 'r', encoding='utf-8') as f:
-            lines = f.readlines()
-        
-        # Update user section
-        user_updated = False
-        for i, line in enumerate(lines):
-            if 'auth:' in line:
-                for j, subline in enumerate(lines[i+1:], i+1):
-                    if 'users:' in subline and not user_updated:
-                        indent = len(subline) - len(subline.lstrip())
-                        # Check if user is already in the list
-                        user_exists = False
-                        for k, userline in enumerate(lines[j+1:], j+1):
-                            if not userline.strip().startswith('-') or len(userline) - len(userline.lstrip()) != indent + 2:
-                                break
-                            if email in userline:
-                                user_exists = True
-                                break
-                        if not user_exists:
-                            # Insert user at end of users list
-                            insert_position = j+1
-                            while insert_position < len(lines) and (insert_position == j+1 or len(lines[insert_position-1]) - len(lines[insert_position-1].lstrip()) == indent + 2):
-                                insert_position += 1
-                            lines.insert(insert_position, ' ' * (indent + 2) + f'- {email}\n')
-                        user_updated = True
-                        break
-
-        # Update basic realm section
-        basic_updated = False
-        for i, line in enumerate(lines):
-            if 'realms:' in line:
-                for j, subline in enumerate(lines[i+1:], i+1):
-                    if 'basic:' in subline and not basic_updated:
-                        indent = len(subline) - len(subline.lstrip())
-                        # Check if credential is already in the list
-                        cred_exists = False
-                        insert_position = j+1
-                        for k, credline in enumerate(lines[j+1:], j+1):
-                            if len(credline.strip()) == 0 or len(credline) - len(credline.lstrip()) <= indent:
-                                insert_position = k
-                                break
-                            if email in credline:
-                                lines[k] = ' ' * (indent + 2) + f'- {email}:{password_hash}\n'
-                                cred_exists = True
-                                break
-                            insert_position = k+1
-                        if not cred_exists:
-                            # Insert credential
-                            lines.insert(insert_position, ' ' * (indent + 2) + f'- {email}:{password_hash}\n')
-                        basic_updated = True
-                        break
-        
-        # Write back the modified lines
+        # Write back to file
         with open(config_file, 'w', encoding='utf-8') as f:
-            f.writelines(lines)
+            ordered_yaml_dump(config, f)
             
         print(f"Config file {config_file} updated successfully.")
-    except (IOError, yaml.YAMLError, KeyError) as e:
+    except Exception as e:
         print(f"Error updating config file: {e}")
         sys.exit(1)
 
