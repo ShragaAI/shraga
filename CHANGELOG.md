@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.2.8 (2025-05-27)
+
+### Bug Fixes
+
+- Allow create user with cmd args ([#36](https://github.com/ShragaAI/shraga/pull/36),
+  [`2154719`](https://github.com/ShragaAI/shraga/commit/21547196b082a06d001846ba2728894c6f7aa6ac))
+
+
 ## v0.2.7 (2025-05-27)
 
 ### Bug Fixes
