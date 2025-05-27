@@ -9,8 +9,8 @@ from starlette.responses import JSONResponse
 
 from shraga_common.logging import get_git_commit
 
-from ..auth.backends import (BasicAuthBackend, GoogleAuthBackend,
-                             JWTAuthBackend, MicrosoftAuthBackend)
+from ..auth import (BasicAuthBackend, GoogleAuthBackend,
+                   JWTAuthBackend, MicrosoftAuthBackend)
 from ..config import get_config
 from ..middlewares import logging_middleware
 from ..services.analytics_service import is_analytics_authorized
