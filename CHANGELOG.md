@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.2.7 (2025-05-27)
+
+### Bug Fixes
+
+- Expose create user script, improve readme ([#35](https://github.com/ShragaAI/shraga/pull/35),
+  [`784f178`](https://github.com/ShragaAI/shraga/commit/784f17837ecf5e80b4a1cf32b5b0af7f3b8cf6b9))
+
+
 ## v0.2.6 (2025-05-27)
 
 ### Bug Fixes
