@@ -4,6 +4,7 @@ import sys
 import getpass
 import bcrypt
 import re
+import argparse
 
 def validate_email(email):
     """Validate email format."""
@@ -37,6 +38,14 @@ def get_user_input():
         print(f"Config file '{config_file}' not found. Please try again.")
     
     return email, password, config_file
+
+def parse_args():
+    """Parse command line arguments."""
+    parser = argparse.ArgumentParser(description='Create a basic auth user and add to config file.')
+    parser.add_argument('email', nargs='?', help='User email address')
+    parser.add_argument('password', nargs='?', help='User password')
+    parser.add_argument('config_file', nargs='?', help='Config file name (e.g., config.demo.yaml)')
+    return parser.parse_args()
 
 def generate_password_hash(password):
     """Generate bcrypt hash for the password."""
@@ -135,7 +144,31 @@ def update_config_file(email, password_hash, config_file):
 
 def main():
     print("=== Basic Auth User Creation ===")
-    email, password, config_file = get_user_input()
+    
+    # Parse command line arguments
+    args = parse_args()
+    
+    # If all arguments are provided, use them directly
+    if args.email and args.password and args.config_file:
+        email = args.email
+        password = args.password
+        config_file = args.config_file
+        
+        # Validate inputs
+        if not validate_email(email):
+            print(f"Invalid email format: {email}")
+            sys.exit(1)
+        
+        if len(password) < 8:
+            print("Password must be at least 8 characters long.")
+            sys.exit(1)
+            
+        if not os.path.exists(config_file):
+            print(f"Config file '{config_file}' not found.")
+            sys.exit(1)
+    else:
+        # If any argument is missing, switch to interactive mode
+        email, password, config_file = get_user_input()
     
     # Generate password hash
     password_hash = generate_password_hash(password)
