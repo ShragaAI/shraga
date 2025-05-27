@@ -149,5 +149,9 @@ def main():
     print(f"\nUser {email} has been added successfully!")
     print("Remember to restart your application for changes to take effect.")
 
+def cli_entrypoint():
+    """Entry point for Poetry-installed CLI command."""
+    main()
+
 if __name__ == "__main__":
     main()
