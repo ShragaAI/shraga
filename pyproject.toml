@@ -5,7 +5,7 @@ description = "Common infrastructure for Shraga AI"
 authors = ["Itamar Syn-Hershko <itamar@bigdataboutique.com>", "lizozom <liza.katz@bigdataboutique.com>", "Felipe Carvalho <felipe@bigdataboutique.com>"]
 readme = "README.md"
 license = "Apache-2.0"
-packages = [{include = "shraga_common"}]
+packages = [{include = "shraga_common"}, {include = "scripts"}]
 
 [tool.commitizen]
 name = "cz_conventional_commits"
@@ -64,6 +64,9 @@ commit_parser = "conventional"
 major_on_zero = false
 allow_zero_version = true
 branch="main"
+
+[tool.poetry.scripts]
+create-basic-auth-user = "scripts.create_basic_auth_user:cli_entrypoint"
 
 [tool.semantic_release.commit_parser_options]
 minor_tags = ["feat"]

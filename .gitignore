@@ -177,3 +177,4 @@ output/
 data/**/*
 **/.DS_Store
 *_credentials.txt
+.vscode/settings.json
