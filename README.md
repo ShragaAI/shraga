@@ -104,8 +104,6 @@ To run the demo flow without requiring an LLM, Elasticsearch, or Opensearch:
    uvicorn main:app --reload
    ```
 
-3. Once the backend is running, you can access the API documentation at http://localhost:8000/docs
-
 ## Project Structure
 
 - `/shraga_common`: Core library with reusable components
