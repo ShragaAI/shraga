@@ -32,7 +32,7 @@ auth:
     - user@domain.com
   realms:
     basic:
-      - user@domain.com:secretpwd
+      - user@domain.com:$2b$12$brwB79JExWprqHPEm4P76uuBsH0Cht8PFiBePKtHnl5g/cibYXpDu
     jwt:
       secret: foobar
     google:  

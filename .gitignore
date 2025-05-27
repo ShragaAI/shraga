@@ -176,3 +176,4 @@ config*.yaml
 output/
 data/**/*
 **/.DS_Store
+*_credentials.txt
