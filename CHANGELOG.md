@@ -1,6 +1,19 @@
 # CHANGELOG
 
 
+## v0.2.9 (2025-05-28)
+
+### Bug Fixes
+
+- Add missing retriever config
+  ([`2584b50`](https://github.com/ShragaAI/shraga/commit/2584b50f054e274e3699d855209ed40d1d8b1535))
+
+### Chores
+
+- Fix docs
+  ([`cd56d9c`](https://github.com/ShragaAI/shraga/commit/cd56d9c9f5d19700fc12e8f98fe85852466f7131))
+
+
 ## v0.2.8 (2025-05-27)
 
 ### Bug Fixes
