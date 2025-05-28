@@ -11,4 +11,7 @@ class RetrieverConfig(BaseModel):
     password: Optional[str] = None
     use_ssl: bool = True
     verify_certs: bool = False
+    # Elasticsearch specific
     use_cloud_id: bool = False
+    cloud_id: Optional[str] = None
+    api_key: Optional[str] = None
