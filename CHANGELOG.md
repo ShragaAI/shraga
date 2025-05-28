@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.2.10 (2025-05-28)
+
+### Bug Fixes
+
+- Remove use_ssl
+  ([`9ccdf66`](https://github.com/ShragaAI/shraga/commit/9ccdf6639e6a24af9ffc9f6d2549a957b1a5b0c5))
+
+
 ## v0.2.9 (2025-05-28)
 
 ### Bug Fixes
