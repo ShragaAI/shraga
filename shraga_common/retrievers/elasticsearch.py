@@ -30,7 +30,6 @@ class ElasticsearchRetriever(BaseSearchRetriever):
         cloud_id = extra_configs.cloud_id
         host = extra_configs.host
         port = extra_configs.port
-        use_ssl = extra_configs.use_ssl
         verify_certs = extra_configs.verify_certs
 
         # Authentication method
@@ -51,14 +50,14 @@ class ElasticsearchRetriever(BaseSearchRetriever):
             if not cloud_id:
                 raise ValueError("cloud_id must be provided if use_cloud_id is true")
             return Elasticsearch(
-                cloud_id=cloud_id, use_ssl=use_ssl, verify_certs=verify_certs, **auth
+                cloud_id=cloud_id, verify_certs=verify_certs, **auth
             )
         else:
+            use_ssl = extra_configs.use_ssl
             if not host:
                 raise ValueError("host must be provided if use_cloud_id is false")
             return Elasticsearch(
                 hosts=[f"{'https' if use_ssl else 'http'}://{host}:{port}"],
-                # use_ssl=use_ssl,
                 verify_certs=verify_certs,
                 **auth,
             )
