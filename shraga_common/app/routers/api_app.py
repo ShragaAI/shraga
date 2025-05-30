@@ -77,6 +77,7 @@ def load_api_app():
             ret = {
                 "display_name": display_name,
                 "shraga_version": get_git_commit() or "unknown",
+                "lifetime": shraga_config.get("auth.lifetime")
                 # "identity": request.user.identity,
             }
             if is_analytics_authorized(display_name):
