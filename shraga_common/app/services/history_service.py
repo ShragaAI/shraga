@@ -157,6 +157,27 @@ async def delete_chat(chat_id: str) -> bool:
     return False
 
 
+def extract_user_org(user_id: str) -> str:
+    common_domains = {
+        'gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 
+        'icloud.com', 'aol.com', 'mail.com', 'protonmail.com',
+        'proton.me', 'live.com', 'msn.com'
+    }
+    
+    if not user_id or '@' not in user_id:
+        return ""
+    
+    parts = user_id.split('@')
+    if len(parts) != 2:
+        return ""
+    
+    domain = parts[1].lower().strip()
+    
+    if domain in common_domains:
+        return ""
+    
+    return domain
+
 async def log_interaction(msg_type: str, request: Request, context: dict):
     try:
         shraga_config = get_config()
@@ -176,6 +197,7 @@ async def log_interaction(msg_type: str, request: Request, context: dict):
         o["platform"] = get_platform_info()
         o["config"] = get_config_info(shraga_config)
         o["user_agent"] = get_user_agent_info(request.headers.get("user-agent"))
+        o["user_org"] = extract_user_org(user_id)
 
         client.index(index=index, body=o)
         return True
