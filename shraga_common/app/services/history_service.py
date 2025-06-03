@@ -3,14 +3,13 @@ import logging
 from typing import List, Optional
 
 from fastapi import Request
-from opensearchpy import NotFoundError
 from pydash import _
 
 from shraga_common.logging import (get_config_info, get_platform_info,
                                    get_user_agent_info)
 from shraga_common.models import FlowResponse, FlowStats
 
-from shraga_common.utils import is_prod_env
+from shraga_common.utils import is_prod_env, extract_user_org
 from ..config import get_config
 from ..models import Chat, ChatMessage, FeedbackRequest, FlowRunApiRequest
 from .get_history_client import get_history_client
@@ -156,27 +155,6 @@ async def delete_chat(chat_id: str) -> bool:
         logger.exception("Error deleting chat")
     return False
 
-
-def extract_user_org(user_id: str) -> str:
-    common_domains = {
-        'gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 
-        'icloud.com', 'aol.com', 'mail.com', 'protonmail.com',
-        'proton.me', 'live.com', 'msn.com'
-    }
-    
-    if not user_id or '@' not in user_id:
-        return ""
-    
-    parts = user_id.split('@')
-    if len(parts) != 2:
-        return ""
-    
-    domain = parts[1].lower().strip()
-    
-    if domain in common_domains:
-        return ""
-    
-    return domain
 
 async def log_interaction(msg_type: str, request: Request, context: dict):
     try:
