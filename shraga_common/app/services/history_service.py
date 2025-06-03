@@ -3,14 +3,13 @@ import logging
 from typing import List, Optional
 
 from fastapi import Request
-from opensearchpy import NotFoundError
 from pydash import _
 
-from shraga_common.logging import (get_config_info, get_platform_info,
+from shraga_common.logger import (get_config_info, get_platform_info,
                                    get_user_agent_info)
 from shraga_common.models import FlowResponse, FlowStats
 
-from shraga_common.utils import is_prod_env
+from shraga_common.utils import is_prod_env, extract_user_org
 from ..config import get_config
 from ..models import Chat, ChatMessage, FeedbackRequest, FlowRunApiRequest
 from .get_history_client import get_history_client
@@ -176,6 +175,7 @@ async def log_interaction(msg_type: str, request: Request, context: dict):
         o["platform"] = get_platform_info()
         o["config"] = get_config_info(shraga_config)
         o["user_agent"] = get_user_agent_info(request.headers.get("user-agent"))
+        o["user_org"] = extract_user_org(user_id)
 
         client.index(index=index, body=o)
         return True

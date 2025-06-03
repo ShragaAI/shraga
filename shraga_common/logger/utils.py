@@ -4,7 +4,7 @@ import subprocess
 
 from user_agents import parse
 
-from ..shraga_config import ShragaConfig
+from shraga_common.shraga_config import ShragaConfig
 from shraga_common.utils import is_prod_env
 
 

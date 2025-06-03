@@ -1,4 +1,4 @@
-from shraga_common import (app, embedders, flows, ingest, logging, models,
+from shraga_common import (app, embedders, flows, ingest, logger, models,
                            preprocessing, prompts, retrievers, routing,
                            services, utils)
 
@@ -6,7 +6,7 @@ __all__ = [
     "app", 
     "embedders", 
     "ingest", 
-    "logging", 
+    "logger", 
     "models", 
     "preprocessing", 
     "prompts", 

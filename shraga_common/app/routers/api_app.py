@@ -7,7 +7,7 @@ from starlette.middleware.cors import CORSMiddleware
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
-from shraga_common.logging import get_git_commit
+from shraga_common.logger import get_git_commit
 
 from ..auth import (BasicAuthBackend, GoogleAuthBackend,
                    JWTAuthBackend, MicrosoftAuthBackend)
