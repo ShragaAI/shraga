@@ -42,6 +42,7 @@ services:
     dark_map_id: ${GOOGLE_MAPS_DARK_MAP_ID}
     light_map_id: ${GOOGLE_MAPS_LIGHT_MAP_ID}
 auth:
+  session_lifetime_hrs: 24
   users:
   - user@domain.com
   realms:
