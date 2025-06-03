@@ -15,7 +15,7 @@ from pydantic import ValidationError
 from shraga_common import ShragaConfig
 from shraga_common.flows.builtin.evaluation_model import (EvaluationModel,
                                                           EvaluationScenario)
-from shraga_common.logging import get_config_info, get_platform_info
+from shraga_common.logger import get_config_info, get_platform_info
 from shraga_common.models import FlowBase, FlowResponse, FlowRunRequest
 from shraga_common.prompts import PART_EVALUATION_PROMPT
 from shraga_common.retrievers import get_client

@@ -5,7 +5,7 @@ from typing import List, Optional
 from fastapi import Request
 from pydash import _
 
-from shraga_common.logging import (get_config_info, get_platform_info,
+from shraga_common.logger import (get_config_info, get_platform_info,
                                    get_user_agent_info)
 from shraga_common.models import FlowResponse, FlowStats
 

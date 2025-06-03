@@ -17,9 +17,9 @@ class TestLogInteraction(unittest.IsolatedAsyncioTestCase):
 
     @patch('shraga_common.app.services.history_service.get_config')
     @patch('shraga_common.app.services.history_service.get_history_client')
-    @patch('shraga_common.logging.get_config_info')
-    @patch('shraga_common.logging.get_platform_info')
-    @patch('shraga_common.logging.get_user_agent_info')
+    @patch('shraga_common.logger.get_config_info')
+    @patch('shraga_common.logger.get_platform_info')
+    @patch('shraga_common.logger.get_user_agent_info')
     async def test_user_org_added_to_log_document(
         self, 
         mock_get_user_agent_info,
@@ -61,9 +61,9 @@ class TestLogInteraction(unittest.IsolatedAsyncioTestCase):
 
     @patch('shraga_common.app.services.history_service.get_config')
     @patch('shraga_common.app.services.history_service.get_history_client')
-    @patch('shraga_common.logging.get_config_info')
-    @patch('shraga_common.logging.get_platform_info')
-    @patch('shraga_common.logging.get_user_agent_info')
+    @patch('shraga_common.logger.get_config_info')
+    @patch('shraga_common.logger.get_platform_info')
+    @patch('shraga_common.logger.get_user_agent_info')
     async def test_handles_request_without_user(
         self,
         mock_get_user_agent_info,
