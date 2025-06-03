@@ -1,6 +1,24 @@
 # CHANGELOG
 
 
+## v0.3.0 (2025-06-03)
+
+### Features
+
+- Add user org in chat history ([#38](https://github.com/ShragaAI/shraga/pull/38),
+  [`5077924`](https://github.com/ShragaAI/shraga/commit/50779244e1fcb266d3bc7808e1c7fc2a92e6de2c))
+
+* feat: add user org in chat history
+
+* fix: code refinements
+
+* chore: update a bunch of tests + resolve circular imports
+
+---------
+
+Co-authored-by: Liza Katz <lizka.k@gmail.com>
+
+
 ## v0.2.10 (2025-05-28)
 
 ### Bug Fixes
