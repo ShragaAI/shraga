@@ -52,7 +52,7 @@ def load_oauth_app():
 
                 return {
                     "token": token_data["access_token"], 
-                    "session_lifetime_hrs": get_config("auth.session_lifetime_hrs", 24),
+                    "session_timeout": get_config("auth.session_timeout", 24),
                 }
 
             except Exception as e:
@@ -84,7 +84,7 @@ def load_oauth_app():
 
                 return {
                     "token": token_data["access_token"],
-                    "session_lifetime_hrs": get_config("auth.session_lifetime_hrs", 24),
+                    "session_timeout": get_config("auth.session_timeout", 24),
                 }
 
             except Exception as e:

@@ -77,7 +77,7 @@ def load_api_app():
             ret = {
                 "display_name": display_name,
                 "shraga_version": get_git_commit() or "unknown",
-                "session_lifetime_hrs": shraga_config.get("auth.session_lifetime_hrs", 24)
+                "session_timeout": shraga_config.get("auth.session_timeout", 24)
                 # "identity": request.user.identity,
             }
             if is_analytics_authorized(display_name):
