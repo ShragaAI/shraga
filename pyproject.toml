@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "shraga-common"
-version = "0.3.0"
+version = "0.4.0"
 description = "Common infrastructure for Shraga AI"
 authors = ["Itamar Syn-Hershko <itamar@bigdataboutique.com>", "lizozom <liza.katz@bigdataboutique.com>", "Felipe Carvalho <felipe@bigdataboutique.com>"]
 readme = "README.md"
