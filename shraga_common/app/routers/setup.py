@@ -8,7 +8,7 @@ from fastapi.templating import Jinja2Templates
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.middleware.gzip import GZipMiddleware
 
-from shraga_common.logging import get_git_commit
+from shraga_common.logger import get_git_commit
 from shraga_common.models import FlowBase
 
 from ..config import get_config, load_config

@@ -1,6 +1,38 @@
 # CHANGELOG
 
 
+## v0.4.0 (2025-06-04)
+
+### Features
+
+- Get auth lifetime from config ([#37](https://github.com/ShragaAI/shraga/pull/37),
+  [`4a5171a`](https://github.com/ShragaAI/shraga/commit/4a5171acc2d11bb41f28053beb95b13c71600353))
+
+* feat: get auth lifetime from config
+
+* fix: code refinements
+
+* fix: change auth lifetime param name
+
+
+## v0.3.0 (2025-06-03)
+
+### Features
+
+- Add user org in chat history ([#38](https://github.com/ShragaAI/shraga/pull/38),
+  [`5077924`](https://github.com/ShragaAI/shraga/commit/50779244e1fcb266d3bc7808e1c7fc2a92e6de2c))
+
+* feat: add user org in chat history
+
+* fix: code refinements
+
+* chore: update a bunch of tests + resolve circular imports
+
+---------
+
+Co-authored-by: Liza Katz <lizka.k@gmail.com>
+
+
 ## v0.2.10 (2025-05-28)
 
 ### Bug Fixes
