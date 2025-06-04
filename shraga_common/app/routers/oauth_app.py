@@ -50,7 +50,10 @@ def load_oauth_app():
                         status_code=400, detail=f"Google OAuth error: {token_data['error']}"
                     )
 
-                return {"token": token_data["access_token"]}
+                return {
+                    "token": token_data["access_token"], 
+                    "session_timeout": get_config("auth.session_timeout", 24),
+                }
 
             except Exception as e:
                 raise HTTPException(
@@ -79,7 +82,10 @@ def load_oauth_app():
                         status_code=400, detail=f"Google OAuth error: {token_data['error']}"
                     )
 
-                return {"token": token_data["access_token"]}
+                return {
+                    "token": token_data["access_token"],
+                    "session_timeout": get_config("auth.session_timeout", 24),
+                }
 
             except Exception as e:
                 raise HTTPException(
