@@ -16,11 +16,13 @@ class BasicAuthBackend(AuthenticationBackend):
                 continue
             entry_user, entry_hash = entry.split(':', 1)
             if username == entry_user:
-                if bcrypt.checkpw(password.encode(), entry_hash.encode()):
-                    return True
-                elif password == entry_hash:
-                    # Allow plaintext password for backward compatibility
-                    return True
+                try:
+                    if bcrypt.checkpw(password.encode(), entry_hash.encode()):
+                        return True
+                except ValueError:
+                    if password == entry_hash:
+                        # Allow plaintext password for backward compatibility
+                        return True
         return False
     
     async def authenticate(self, conn):
