@@ -1,6 +1,24 @@
 # CHANGELOG
 
 
+## v0.5.0 (2025-06-09)
+
+### Chores
+
+- Add auth unit tests
+  ([`44ba8f2`](https://github.com/ShragaAI/shraga/commit/44ba8f2bfa232772a1a6601244444923602cd9f6))
+
+### Features
+
+- Replace chat history endpoint for Analytics with chat dialogs endpoint
+  ([#39](https://github.com/ShragaAI/shraga/pull/39),
+  [`8b9c77d`](https://github.com/ShragaAI/shraga/commit/8b9c77d6528b568cef207e5d07180303fe3c752f))
+
+* feat: replace chat history endpoint for Analytics with chat dialogs endpoint
+
+* fix: move get_chat_dialogs to analytics service
+
+
 ## v0.4.0 (2025-06-04)
 
 ### Features
