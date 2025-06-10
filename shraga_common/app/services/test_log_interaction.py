@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import Mock, patch
 
+from shraga_common.app.auth.user import ShragaUser
 from shraga_common.app.services.history_service import log_interaction
 
 class TestLogInteraction(unittest.IsolatedAsyncioTestCase):
@@ -8,9 +9,14 @@ class TestLogInteraction(unittest.IsolatedAsyncioTestCase):
     def create_mock_request(self, user_id: str):
         request = Mock()
         if user_id != "<unknown>":
-            request.user = Mock()
-            request.user.display_name = user_id
+            # Create a ShragaUser instead of a basic Mock
+            request.user = ShragaUser(
+                username=user_id,
+                roles=["user"],
+                metadata={"auth_type": "test"}
+            )
         else:
+            # For the case where we test without a user
             pass
         request.headers = {"user-agent": "test-agent"}
         return request
@@ -79,15 +85,33 @@ class TestLogInteraction(unittest.IsolatedAsyncioTestCase):
         mock_get_platform_info.return_value = {"platform": "test"}
         mock_get_user_agent_info.return_value = {"user_agent": "test"}
         
+        # Creating a request without a user attribute
         request = Mock(spec=['headers'])
         request.headers = {"user-agent": "test-agent"}
+        # Make request.user raise AttributeError when accessed
+        def user_property_raiser(obj):
+            raise AttributeError("'Request' object has no attribute 'user'")
         
-        result = await log_interaction("user", request, {"text": "test", "chat_id": "test_chat", "flow_id": "test_flow"})
+        # Create a property that raises an AttributeError when accessed
+        type(request).__getattr__ = Mock(side_effect=user_property_raiser)
         
-        self.assertTrue(result)
-        
-        saved_document = mock_opensearch_client.index.call_args[1]["body"]
-        self.assertEqual(saved_document["user_org"], "")
+        context = {"text": "test", "chat_id": "test_chat", "flow_id": "test_flow"}
+        with patch('shraga_common.app.services.history_service.ShragaUser') as mock_shraga_user:
+            # Create a mock ShragaUser with default values
+            mock_anonymous_user = Mock()
+            mock_anonymous_user.identity = "<unknown>"
+            mock_anonymous_user.user_org = ""
+            mock_anonymous_user.metadata = {}
+            mock_shraga_user.return_value = mock_anonymous_user
+            
+            result = await log_interaction("user", request, context)
+            
+            self.assertTrue(result)
+            mock_shraga_user.assert_called_once()
+            
+            saved_document = mock_opensearch_client.index.call_args[1]["body"]
+            self.assertEqual(saved_document["user_id"], "<unknown>")
+            self.assertEqual(saved_document["user_org"], "")
 
 
 if __name__ == '__main__':

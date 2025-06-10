@@ -164,7 +164,13 @@ async def log_interaction(msg_type: str, request: Request, context: dict):
         if not client:
             return
 
-        user: ShragaUser = request.user
+        # Handle case when request has no user attribute
+        try:
+            user: ShragaUser = request.user
+        except (AttributeError, Exception):
+            # Create a default anonymous user
+            user = ShragaUser(username="<unknown>")
+
         message = ChatMessage(
             msg_type=msg_type,
             timestamp=datetime.datetime.now(tz=datetime.timezone.utc),
