@@ -21,8 +21,8 @@ class JWTAuthBackend(AuthenticationBackend):
         try:
             scheme, token = auth.split()
             if scheme.lower() != "bearer":
-                return
-            auth_secret = shraga_config.auth_realms().get("jwt").get("secret")
+                raise AuthenticationError("Invalid scheme")
+            auth_secret = shraga_config.auth_realms().get("jwt", {}).get("secret", "")
             decoded = jwt.decode(token, auth_secret, algorithms=["HS256"])
         except (ValueError, UnicodeDecodeError, binascii.Error, jwt.DecodeError):
             raise AuthenticationError("Invalid JWT token")

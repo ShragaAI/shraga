@@ -6,6 +6,7 @@ import bcrypt
 from starlette.authentication import AuthCredentials, AuthenticationError, SimpleUser
 
 from shraga_common.app.auth.basic_auth import BasicAuthBackend
+from shraga_common.app.auth.user import ShragaUser
 from shraga_common.shraga_config import ShragaConfig
 
 
@@ -113,7 +114,11 @@ class TestBasicAuthBackend(unittest.IsolatedAsyncioTestCase):
         # Verify results
         self.assertEqual(credentials.scopes, AuthCredentials(["authenticated"]).scopes)
         self.assertEqual(user.username, self.test_username)
-        self.assertIsInstance(user, SimpleUser)
+        self.assertIsInstance(user, ShragaUser)
+        
+        # Verify user metadata contains auth_type
+        self.assertEqual(user.get_metadata("auth_type"), "basic")
+        self.assertEqual(user.get_metadata("email"), self.test_username)
 
     @patch("shraga_common.app.auth.basic_auth.get_config")
     async def test_authenticate_with_plaintext_password(self, mock_get_config):
@@ -136,7 +141,11 @@ class TestBasicAuthBackend(unittest.IsolatedAsyncioTestCase):
         # Verify results
         self.assertEqual(credentials.scopes, AuthCredentials(["authenticated"]).scopes)
         self.assertEqual(user.username, self.test_username)
-        self.assertIsInstance(user, SimpleUser)
+        self.assertIsInstance(user, ShragaUser)
+        
+        # Verify user metadata contains auth_type
+        self.assertEqual(user.get_metadata("auth_type"), "basic")
+        self.assertEqual(user.get_metadata("email"), self.test_username)
         
         # Add a warning message in the test to remind developers this will be removed
         print(
@@ -150,8 +159,9 @@ class TestBasicAuthBackend(unittest.IsolatedAsyncioTestCase):
         # Set up already authenticated user
         # In Starlette, conn.user is an attribute not a dictionary key
         # so we need to make our mock behave like the real connection object
-        mock_user = MagicMock()
+        mock_user = MagicMock(spec=ShragaUser)
         mock_user.is_authenticated = True
+        mock_user.metadata = {"auth_type": "test_auth"}
         
         # Create a new mock connection to avoid side effects from other tests
         conn = MagicMock()
@@ -166,6 +176,7 @@ class TestBasicAuthBackend(unittest.IsolatedAsyncioTestCase):
         # Verify results - should return existing user
         self.assertEqual(credentials.scopes, AuthCredentials(["authenticated"]).scopes)
         self.assertEqual(user, conn.user)
+        self.assertEqual(user.metadata["auth_type"], "test_auth")
         
         # Verify we didn't try to authenticate again
         mock_get_config.assert_not_called()
