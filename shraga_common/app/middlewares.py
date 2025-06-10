@@ -26,7 +26,9 @@ async def logging_middleware(request: Request, call_next) -> Response:
         took = int((time.time() - start_time) * 1000)
         shraga_config = get_config()
         logger.info(
-            f"Request {request.url.path} completed in {took}ms",
+            "Request %s completed in %dms",
+            request.url.path,
+            took,
             extra={
                 "took": took,
                 "url.path": request.url.path,

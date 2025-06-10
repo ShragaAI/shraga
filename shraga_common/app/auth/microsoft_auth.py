@@ -2,7 +2,9 @@ import binascii
 
 import requests
 from starlette.authentication import (AuthCredentials, AuthenticationBackend,
-                                     AuthenticationError, SimpleUser)
+                                     AuthenticationError)
+
+from .user import ShragaUser
 
 
 class MicrosoftAuthBackend(AuthenticationBackend):
@@ -19,15 +21,31 @@ class MicrosoftAuthBackend(AuthenticationBackend):
             if scheme.lower() != "microsoft":
                 return
             response = requests.get(
-                f"https://graph.microsoft.com/v1.0/me",
+                "https://graph.microsoft.com/v1.0/me",
                 headers={"Authorization": f"Bearer {token}"},
+                timeout=10
             )
             if response.status_code != 200:
                 raise AuthenticationError("Invalid Microsoft OAuth token")
             user_info = response.json()
-        except (ValueError, UnicodeDecodeError, binascii.Error):
-            raise AuthenticationError("Invalid Microsoft OAuth token")
+        except (ValueError, UnicodeDecodeError, binascii.Error) as exc:
+            raise AuthenticationError("Invalid Microsoft OAuth token") from exc
 
-        return AuthCredentials(["authenticated"]), SimpleUser(
-            user_info["userPrincipalName"]
+        username = user_info.get("mail") or user_info.get("userPrincipalName")
+        
+        metadata = {
+            "display_name": user_info.get("displayName"),
+            "email": user_info.get("mail") or user_info.get("userPrincipalName"),
+            "user_id": user_info.get("id"),
+            "auth_type": "microsoft",
+        }
+        
+        # Remove None values
+        metadata = {k: v for k, v in metadata.items() if v is not None}
+            
+        user = ShragaUser(
+            username=username,
+            metadata=metadata
         )
+
+        return AuthCredentials(["authenticated"]), user
