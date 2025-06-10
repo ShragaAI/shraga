@@ -19,6 +19,7 @@ from .analytics_api import router as analytics_router
 from .flows_api import router as flows_router
 from .history_api import router as history_router
 from .services_api import router as services_router
+from .report_api import router as report_router
 
 api_app = FastAPI(root_path="/api")
 
@@ -114,8 +115,8 @@ def load_api_app():
             prefix="/history",
             tags=["history"],
         )
-        if get_config("history.analytics"):
 
+        if get_config("history.analytics"):
             def check_analytics_auth(request: Request):
                 email = request.user.display_name if hasattr(request, "user") else None
                 if not is_analytics_authorized(email):
@@ -126,6 +127,13 @@ def load_api_app():
                 analytics_router,
                 prefix="/analytics",
                 tags=["analytics"],
+                dependencies=[Depends(check_analytics_auth)],
+            )
+
+            api_app.include_router(
+                report_router,
+                prefix="/report",
+                tags=["report"],
                 dependencies=[Depends(check_analytics_auth)],
             )
 
