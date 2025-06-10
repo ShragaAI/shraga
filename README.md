@@ -132,6 +132,8 @@ user_id (Optional)
 user_org (Optional)
 ```
 
+The endpoint is available for users with `analytics` permission
+
 Example:
 
 ```bash
