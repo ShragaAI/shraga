@@ -1,22 +1,22 @@
-{
-  "index_patterns": ["shraga-chat-history*"],
-  "template": {
-    "aliases": {
-      "chat-history": {}
-    },
-    "settings": {
-      "index": {
-        "number_of_shards": 1,
-        "number_of_replicas": 2
-      }
-    },
-    "mappings": {
-      "dynamic_templates": [
-        {
-          "stats": {
-            "match_mapping_type": "object",
-            "match": "*_stats",
-            "mapping": {
+  {
+    "index_patterns": ["shraga-chat-history*"],
+    "template": {
+      "aliases": {
+        "chat-history": {}
+      },
+      "settings": {
+        "index": {
+          "number_of_shards": 1,
+          "number_of_replicas": 2
+        }
+      },
+      "mappings": {
+        "dynamic_templates": [
+          {
+            "stats": {
+              "match_mapping_type": "object",
+              "match": "*_stats",
+              "mapping": {
               "dynamic": false,
               "properties": {
                 "latency": {
@@ -32,9 +32,27 @@
               }
             }
           }
+        },
+        {
+          "text_with_keyword": {
+          "path_match": "user_metadata.*",
+          "mapping": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
         }
       ],
       "properties": {
+        "user_metadata": {
+          "type": "object",
+          "dynamic": true
+        },
         "timestamp": {
           "type": "date"
         },

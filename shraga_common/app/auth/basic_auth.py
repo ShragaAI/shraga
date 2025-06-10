@@ -4,9 +4,10 @@ import bcrypt
 
 
 from starlette.authentication import (AuthCredentials, AuthenticationBackend,
-                                     AuthenticationError, SimpleUser)
+                                     AuthenticationError)
 
 from ..config import get_config
+from .user import ShragaUser
 
 
 class BasicAuthBackend(AuthenticationBackend):
@@ -49,4 +50,12 @@ class BasicAuthBackend(AuthenticationBackend):
         if not self.verify_basic_auth(username, password, basic_users):
             raise AuthenticationError("Authentication failed")
 
-        return AuthCredentials(["authenticated"]), SimpleUser(username)
+        user = ShragaUser(
+            username=username,
+            metadata={
+                "auth_type": "basic",
+                "email": username
+            }
+        )
+
+        return AuthCredentials(["authenticated"]), user

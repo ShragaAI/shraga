@@ -9,7 +9,8 @@ from shraga_common.logger import (get_config_info, get_platform_info,
                                    get_user_agent_info)
 from shraga_common.models import FlowResponse, FlowStats
 
-from shraga_common.utils import is_prod_env, extract_user_org
+from shraga_common.utils import is_prod_env
+from ..auth.user import ShragaUser
 from ..config import get_config
 from ..models import Chat, ChatMessage, FeedbackRequest, FlowRunApiRequest
 from .get_history_client import get_history_client
@@ -163,11 +164,11 @@ async def log_interaction(msg_type: str, request: Request, context: dict):
         if not client:
             return
 
-        user_id = request.user.display_name if hasattr(request, "user") else "<unknown>"
+        user: ShragaUser = request.user
         message = ChatMessage(
             msg_type=msg_type,
             timestamp=datetime.datetime.now(tz=datetime.timezone.utc),
-            user_id=user_id,
+            user_id=user.identity,
             **context
         )
 
@@ -175,7 +176,8 @@ async def log_interaction(msg_type: str, request: Request, context: dict):
         o["platform"] = get_platform_info()
         o["config"] = get_config_info(shraga_config)
         o["user_agent"] = get_user_agent_info(request.headers.get("user-agent"))
-        o["user_org"] = extract_user_org(user_id)
+        o["user_org"] = user.user_org
+        o["user_metadata"] = user.metadata
 
         client.index(index=index, body=o)
         return True

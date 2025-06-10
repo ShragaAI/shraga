@@ -2,9 +2,10 @@ import binascii
 
 import jwt
 from starlette.authentication import (AuthCredentials, AuthenticationBackend,
-                                     AuthenticationError, SimpleUser)
+                                     AuthenticationError)
 
 from ..config import get_config
+from .user import ShragaUser
 
 
 class JWTAuthBackend(AuthenticationBackend):
@@ -27,4 +28,14 @@ class JWTAuthBackend(AuthenticationBackend):
             raise AuthenticationError("Invalid JWT token")
 
         username = decoded.get("username") or decoded.get("email") or "anonymous"
-        return AuthCredentials(["authenticated"]), SimpleUser(str(username).strip())
+        metadata = {k: v for k, v in decoded.items() if v is not None}
+
+        user = ShragaUser(
+            username=username,
+            metadata={
+                "auth_type": "jwt",
+                **metadata
+            }
+        )
+        
+        return AuthCredentials(["authenticated"]), user
