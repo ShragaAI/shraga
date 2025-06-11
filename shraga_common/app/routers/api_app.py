@@ -85,7 +85,6 @@ def load_api_app():
             return ret
 
     else:
-
         @api_app.get("/whoami")
         async def whoami() -> dict:
             return {"user": "<unknown>", "roles": ["analytics"]}
@@ -116,26 +115,31 @@ def load_api_app():
             tags=["history"],
         )
 
-        if get_config("history.analytics"):
-            def check_analytics_auth(request: Request):
-                email = request.user.display_name if hasattr(request, "user") else None
-                if not is_analytics_authorized(email):
-                    raise HTTPException(status_code=403)
-                return True
+        def check_analytics_auth(request: Request):
+            if not get_config("history.analytics"):
+                raise HTTPException(
+                    status_code=403,
+                    detail="Analytics functionality is disabled"
+                )
 
-            api_app.include_router(
-                analytics_router,
-                prefix="/analytics",
-                tags=["analytics"],
-                dependencies=[Depends(check_analytics_auth)],
-            )
+            email = request.user.display_name if hasattr(request, "user") else None
+            if not is_analytics_authorized(email):
+                raise HTTPException(status_code=403)
+            return True
 
-            api_app.include_router(
-                report_router,
-                prefix="/report",
-                tags=["report"],
-                dependencies=[Depends(check_analytics_auth)],
-            )
+        api_app.include_router(
+            analytics_router,
+            prefix="/analytics",
+            tags=["analytics"],
+            dependencies=[Depends(check_analytics_auth)],
+        )
+
+        api_app.include_router(
+            report_router,
+            prefix="/report",
+            tags=["report"],
+            dependencies=[Depends(check_analytics_auth)],
+        )
 
 
     api_app.include_router(

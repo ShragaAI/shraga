@@ -132,13 +132,41 @@ user_id (Optional)
 user_org (Optional)
 ```
 
-The endpoint is available for users with `analytics` permission
+The endpoint is available for users with `analytics` permission and `history` has to be enabled in config.yaml.
+Analytics permission can be created in config.yaml:
+
+```
+history:
+   enabled: true
+   analytics: 
+     domains:
+       - domain.ltd
+```
+
+OR
+
+```
+history:
+   enabled: true
+   analytics: 
+      users:
+         - username_from_auth.users
+```
+
 
 Example:
 
 ```bash
-curl -X GET "http://localhost:8000/api/report/export?report_type=history&start=2025-04-01%2000:00:00&end=2025-06-01%2023:59:59&user_id=user@domain.ltd&user_org=company_name" \
-  -H "Authorization: Basic YOUR_TOKEN_HERE"
+curl -X POST "http://localhost:8000/api/report/export" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Basic YOUR_TOKEN_HERE" \
+  -d '{
+    "report_type": "history",
+    "start": "2025-04-01 00:00:00",
+    "end": "2025-06-01 00:00:00",
+    "user_id": "user@domain.ltd",
+    "user_org": "company_name",
+  }'
 ```
 
 
