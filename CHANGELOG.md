@@ -1,6 +1,20 @@
 # CHANGELOG
 
 
+## v0.6.0 (2025-06-11)
+
+### Features
+
+- Report service and export report endpoint ([#40](https://github.com/ShragaAI/shraga/pull/40),
+  [`c8fe5f7`](https://github.com/ShragaAI/shraga/commit/c8fe5f7e763a456526aa2d4a3fb53a554170a12a))
+
+* feat: report service and export report endpoint
+
+* chore: readme update
+
+* feat: replace get with post, return status 403 if user without permission
+
+
 ## v0.5.0 (2025-06-09)
 
 ### Chores
