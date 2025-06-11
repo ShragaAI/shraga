@@ -120,6 +120,56 @@ This project uses pre-commit hooks to enforce code style. They're installed with
 poetry run pre-commit install
 ```
 
+## Report API
+
+For generating chat reports use `/api/report/export` endpoint with params:
+
+```
+report_type=history
+start="YYYY-MM-DD HH:MM:SS" (Optional)
+end="YYYY-MM-DD HH:MM:SS" (Optional)
+user_id (Optional)
+user_org (Optional)
+```
+
+The endpoint is available for users with `analytics` permission and `history` has to be enabled in config.yaml.
+Analytics permission can be created in config.yaml:
+
+```
+history:
+   enabled: true
+   analytics: 
+     domains:
+       - domain.ltd
+```
+
+OR
+
+```
+history:
+   enabled: true
+   analytics: 
+      users:
+         - username_from_auth.users
+```
+
+
+Example:
+
+```bash
+curl -X POST "http://localhost:8000/api/report/export" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Basic YOUR_TOKEN_HERE" \
+  -d '{
+    "report_type": "history",
+    "start": "2025-04-01 00:00:00",
+    "end": "2025-06-01 00:00:00",
+    "user_id": "user@domain.ltd",
+    "user_org": "company_name",
+  }'
+```
+
+
 ## License
 
 This project is licensed under the Apache License 2.0 - see the LICENSE file for details.
