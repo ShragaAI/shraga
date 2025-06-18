@@ -80,7 +80,6 @@ async def run_flow(
         return rsp
 
     except RequestCancelledException:
-        add_log_error_task(bg_tasks, keep, request, req_body, "Request cancelled by client")
         return JSONResponse(status_code=500, content={"detail": "Request cancelled by client"})
     
     except LLMServiceUnavailableException as e:
