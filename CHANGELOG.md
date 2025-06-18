@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.6.1 (2025-06-18)
+
+### Bug Fixes
+
+- Remove error log if user canceled a request ([#43](https://github.com/ShragaAI/shraga/pull/43),
+  [`fdf7157`](https://github.com/ShragaAI/shraga/commit/fdf7157c6dd3c7ab6268dfd24a2b8e3054ece968))
+
+
 ## v0.6.0 (2025-06-11)
 
 ### Features
