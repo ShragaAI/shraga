@@ -33,7 +33,7 @@ async def get_flows_list(full: Optional[bool] = True) -> List[dict]:
     
     flows = list_flows_service.get_flows(shraga_config)
 
-    if list_flows:
+    if list_flows or not default_flow:
         for k, v in flows.items():
             if v["obj"].listed:
                 routes.append(
@@ -45,9 +45,6 @@ async def get_flows_list(full: Optional[bool] = True) -> List[dict]:
                 )
         routes.sort(key=lambda x: x["id"])
     else:
-        if not default_flow:
-            return routes
-
         default_flows = (
             [default_flow] if isinstance(default_flow, str) else default_flow
         )
