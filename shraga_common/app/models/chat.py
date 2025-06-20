@@ -16,6 +16,7 @@ class ChatMessage(BaseModel):
     user_id: Optional[str] = None
     msg_type: Literal["user", "system", "feedback", "flow_stats", "error"]
     position: Optional[int] = None
+    preferences: Optional[dict] = None
     context: Optional[dict] = None
     feedback: Optional[str] = None
     stats: Optional[List[FlowStats] | FlowStats] = None

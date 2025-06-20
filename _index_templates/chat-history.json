@@ -80,6 +80,9 @@
         "feedback": {
           "type": "text"
         },
+        "preferences": {
+          "type": "object"
+        },
         "user_agent": {
           "properties": {
             "browser": {
