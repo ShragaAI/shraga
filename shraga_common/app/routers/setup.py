@@ -20,12 +20,13 @@ from .oauth_app import load_oauth_app, oauth_app
 
 def setup_app(config_path: str, flows: List[FlowBase]) -> FastAPI:
     shraga_config = load_config(config_path)
-    list_flows_service.register_flows(flows, shraga_config)
-    load_api_app()
-    load_oauth_app()
     
     if not shraga_config:
         exit(1)
+    
+    list_flows_service.register_flows(flows, shraga_config)
+    load_api_app()
+    load_oauth_app()
 
     app = FastAPI(
         title="Shraga",
