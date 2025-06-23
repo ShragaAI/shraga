@@ -53,7 +53,7 @@ paths:
             result = config.load()
             
             # Check that the file was opened with the default path
-            mock_file.assert_called_once_with("config.yaml")
+            mock_file.assert_called_once_with("config.yaml", encoding='utf-8')
             
             # Check that the config was loaded and returned self
             self.assertEqual(result, config)
@@ -72,7 +72,7 @@ paths:
             config.load()
             
             # Check that the file was opened with the path from environment variable
-            mock_file.assert_called_once_with("/custom/path/config.yaml")
+            mock_file.assert_called_once_with("/custom/path/config.yaml", encoding='utf-8')
 
     @patch.dict(os.environ, {"CONFIG_PATH": "/custom/path/config.yaml"})
     @patch("builtins.open", new_callable=mock_open)
@@ -87,7 +87,7 @@ paths:
             config.load("/explicit/path/config.yaml")
             
             # Check that the file was opened with the explicitly provided path
-            mock_file.assert_called_once_with("/explicit/path/config.yaml")
+            mock_file.assert_called_once_with("/explicit/path/config.yaml", encoding='utf-8')
 
     def test_get_existing_key(self):
         """Test getting an existing key from config"""
@@ -244,6 +244,75 @@ paths:
         result = config.path_constructor(loader, node)
         self.assertEqual(result, "")
 
+    def test_validate_config_list_flows_true(self):
+        """Test validate_config when list_flows is True"""
+        config = ShragaConfig()
+        config.all_configs = {
+            "ui": {
+                "list_flows": True,
+                # No default_flow needed when list_flows is True
+            }
+        }
+        
+        # Should not raise an exception
+        config.validate_config()
+
+    def test_validate_config_list_flows_false_with_default(self):
+        """Test validate_config when list_flows is False and default_flow is set"""
+        config = ShragaConfig()
+        config.all_configs = {
+            "ui": {
+                "list_flows": False,
+                "default_flow": "some_flow"
+            }
+        }
+        
+        # Should not raise an exception
+        config.validate_config()
+
+    def test_validate_config_list_flows_false_without_default(self):
+        """Test validate_config when list_flows is False and default_flow is not set"""
+        config = ShragaConfig()
+        config.all_configs = {
+            "ui": {
+                "list_flows": False,
+                # No default_flow
+            }
+        }
+        
+        # Should raise a ValueError
+        with self.assertRaises(ValueError) as context:
+            config.validate_config()
+        
+        self.assertIn("When list_flows is not enabled, default_flow must be specified", str(context.exception))
+
+    def test_validate_config_list_flows_none_with_default(self):
+        """Test validate_config when list_flows is None and default_flow is set"""
+        config = ShragaConfig()
+        config.all_configs = {
+            "ui": {
+                # list_flows not set (None)
+                "default_flow": "some_flow"
+            }
+        }
+        
+        # Should not raise an exception
+        config.validate_config()
+
+    def test_validate_config_list_flows_none_without_default(self):
+        """Test validate_config when list_flows is None and default_flow is not set"""
+        config = ShragaConfig()
+        config.all_configs = {
+            "ui": {
+                # Neither list_flows nor default_flow are set
+            }
+        }
+        
+        # Should raise a ValueError
+        with self.assertRaises(ValueError) as context:
+            config.validate_config()
+        
+        self.assertIn("When list_flows is not enabled, default_flow must be specified", str(context.exception))
 
 if __name__ == "__main__":
     unittest.main()

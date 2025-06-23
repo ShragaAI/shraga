@@ -27,16 +27,10 @@ class ShragaConfig:
         list_flows = self.get("ui.list_flows")
         default_flow = self.get("ui.default_flow")
         
-        if list_flows is None:
-            raise ValueError("ui.list_flows must be explicitly set to true or false when UI is enabled", file=sys.stderr)
-            
-        if list_flows is True:
-            pass
-        elif list_flows is False:
-            if not isinstance(default_flow, str) or not default_flow.strip():
-                raise ValueError("When ui.list_flows is false, ui.default_flow must be a non-empty string")
-        else:
-            raise ValueError(f"ui.list_flows must be true or false, got: {list_flows}")
+        # If list_flows is not True (either False or None), default_flow must be set
+        if list_flows is not True:
+            if not default_flow:
+                raise ValueError("When list_flows is not enabled, default_flow must be specified")
 
     def load(self, config_path: str = None):
         if not config_path:
@@ -44,7 +38,7 @@ class ShragaConfig:
         print(f"Loading config from {config_path}")
 
         try:
-            with open(config_path) as stream:
+            with open(config_path, encoding='utf-8') as stream:
                 yaml.add_implicit_resolver("!path", self.path_matcher)
                 yaml.add_constructor("!path", self.path_constructor)
                 self.all_configs = yaml.load(stream, Loader=yaml.FullLoader)
@@ -56,7 +50,7 @@ class ShragaConfig:
         except ValueError as e:
             print(f"ERROR: Configuration validation failed: {e}", file=sys.stderr)
             return None
-        except Exception as e:
+        except (FileNotFoundError, yaml.YAMLError, IOError) as e:
             print(f"ERROR: Failed to load config from {config_path}: {e}", file=sys.stderr)
             return None
 
