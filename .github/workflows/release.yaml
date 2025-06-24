@@ -1,9 +1,10 @@
 name: Release
 
 on:
-  push:
-    branches:
-      - main
+  workflow_run:
+    workflows: ["Testing"]
+    types: [completed]
+    branches: [main]
   workflow_dispatch:
 
 jobs:

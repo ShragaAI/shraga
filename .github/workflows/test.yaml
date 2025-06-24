@@ -1,0 +1,35 @@
+name: Testing
+
+on:
+  push:
+    branches:
+      - "**"
+
+jobs:
+  static-analysis:
+    runs-on: ubuntu-latest
+    container:
+      image: python:3.11
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Cache Poetry virtual environment
+        uses: actions/cache@v4
+        with:
+          path: pypoetry_cache
+          key: ${{ runner.os }}-poetry-${{ hashFiles('poetry.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-poetry-
+
+      - name: Set up Python environment
+        run: |
+          export POETRY_HOME=/opt/poetry
+          curl -sSL https://install.python-poetry.org | python3 - --version 1.7.0
+          /opt/poetry/bin/poetry config virtualenvs.create false
+          /opt/poetry/bin/poetry config cache-dir pypoetry_cache
+          /opt/poetry/bin/poetry install --no-root --sync
+
+      - name: Run tests
+        run: |
+          PYTHONPATH=shraga_common /opt/poetry/bin/poetry run python -m unittest
