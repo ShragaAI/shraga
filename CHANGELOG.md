@@ -1,6 +1,33 @@
 # CHANGELOG
 
 
+## v0.6.2 (2025-06-24)
+
+### Bug Fixes
+
+- Bump
+  ([`80af422`](https://github.com/ShragaAI/shraga/commit/80af422dba09d27d0ffa98f243283a0b996563db))
+
+### Chores
+
+- Add eval metric ([#42](https://github.com/ShragaAI/shraga/pull/42),
+  [`ce7a7bd`](https://github.com/ShragaAI/shraga/commit/ce7a7bd954a4d89747da02997b60701f004196bc))
+
+Co-authored-by: Dinor Nagar <dinornagar@Dinors-MacBook-Air.local>
+
+- Bump
+  ([`3e12757`](https://github.com/ShragaAI/shraga/commit/3e12757fd4e57b4061fcf94444f62ecfdaf7b961))
+
+- Cleanup
+  ([`4c8957b`](https://github.com/ShragaAI/shraga/commit/4c8957b02621aa91a9e6ea81353a0e28eeb89d5c))
+
+- Cleanup!
+  ([`e45dafd`](https://github.com/ShragaAI/shraga/commit/e45dafd44094f3cd39c7af4138bd12090966e461))
+
+- Ignore
+  ([`7e9a507`](https://github.com/ShragaAI/shraga/commit/7e9a507089ad594279f1b7c6bdd19e33aa7f6f62))
+
+
 ## v0.6.1 (2025-06-18)
 
 ### Bug Fixes
