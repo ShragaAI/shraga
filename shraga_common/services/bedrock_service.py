@@ -8,7 +8,7 @@ import botocore
 
 from shraga_common import ShragaConfig, LLMServiceUnavailableException
 from shraga_common.models import FlowStats
-from ..utils import safe_to_int
+from shraga_common.utils import safe_to_int
 from .common import LLMModelResponse
 from .llm_service import LLMService, LLMServiceOptions
 

@@ -21,7 +21,9 @@ class ShragaConfig:
             return env_var_val + value[match.end() :]
         return ""
 
-    def load(self, config_path: str = os.getenv("CONFIG_PATH") or "config.yaml"):
+    def load(self, config_path: str = None):
+        if not config_path:
+            config_path = os.getenv("CONFIG_PATH") or "config.yaml"
         print(f"Loading config from {config_path}")
         with open(config_path) as stream:
             yaml.add_implicit_resolver("!path", self.path_matcher)

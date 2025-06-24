@@ -3,14 +3,14 @@ import logging
 from typing import List, Optional
 
 from fastapi import Request
-from opensearchpy import NotFoundError
 from pydash import _
 
-from shraga_common.logging import (get_config_info, get_platform_info,
+from shraga_common.logger import (get_config_info, get_platform_info,
                                    get_user_agent_info)
 from shraga_common.models import FlowResponse, FlowStats
 
 from shraga_common.utils import is_prod_env
+from ..auth.user import ShragaUser
 from ..config import get_config
 from ..models import Chat, ChatMessage, FeedbackRequest, FlowRunApiRequest
 from .get_history_client import get_history_client
@@ -164,11 +164,17 @@ async def log_interaction(msg_type: str, request: Request, context: dict):
         if not client:
             return
 
-        user_id = request.user.display_name if hasattr(request, "user") else "<unknown>"
+        # Handle case when request has no user attribute
+        try:
+            user: ShragaUser = request.user
+        except (AttributeError, Exception):
+            # Create a default anonymous user
+            user = ShragaUser(username="<unknown>")
+
         message = ChatMessage(
             msg_type=msg_type,
             timestamp=datetime.datetime.now(tz=datetime.timezone.utc),
-            user_id=user_id,
+            user_id=user.identity,
             **context
         )
 
@@ -176,6 +182,8 @@ async def log_interaction(msg_type: str, request: Request, context: dict):
         o["platform"] = get_platform_info()
         o["config"] = get_config_info(shraga_config)
         o["user_agent"] = get_user_agent_info(request.headers.get("user-agent"))
+        o["user_org"] = user.user_org
+        o["user_metadata"] = user.metadata
 
         client.index(index=index, body=o)
         return True

@@ -32,9 +32,27 @@
               }
             }
           }
+        },
+        {
+          "text_with_keyword": {
+          "path_match": "user_metadata.*",
+          "mapping": {
+            "type": "text",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 256
+              }
+            }
+          }
+        }
         }
       ],
       "properties": {
+        "user_metadata": {
+          "type": "object",
+          "dynamic": true
+        },
         "timestamp": {
           "type": "date"
         },
@@ -42,6 +60,9 @@
           "type": "keyword"
         },
         "user_id": {
+          "type": "keyword"
+        },
+        "user_org": {
           "type": "keyword"
         },
         "msg_id": {

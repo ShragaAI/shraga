@@ -4,6 +4,7 @@ from .chat import Chat, ChatMessage
 from .feedback_request import FeedbackRequest
 
 __all__ = [
+    "AnalyticsRequest",
     "FlowRunApiRequest",
     "Chat",
     "ChatMessage",

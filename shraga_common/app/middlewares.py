@@ -3,7 +3,7 @@ import time
 from starlette.requests import Request
 from starlette.responses import Response
 
-from shraga_common.logging import (get_config_info, get_platform_info,
+from shraga_common.logger import (get_config_info, get_platform_info,
                                    get_user_agent_info, init_logging)
 
 from .config import get_config
@@ -26,7 +26,9 @@ async def logging_middleware(request: Request, call_next) -> Response:
         took = int((time.time() - start_time) * 1000)
         shraga_config = get_config()
         logger.info(
-            f"Request {request.url.path} completed in {took}ms",
+            "Request %s completed in %dms",
+            request.url.path,
+            took,
             extra={
                 "took": took,
                 "url.path": request.url.path,

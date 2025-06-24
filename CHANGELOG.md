@@ -1,6 +1,78 @@
 # CHANGELOG
 
 
+## v0.6.1 (2025-06-18)
+
+### Bug Fixes
+
+- Remove error log if user canceled a request ([#43](https://github.com/ShragaAI/shraga/pull/43),
+  [`fdf7157`](https://github.com/ShragaAI/shraga/commit/fdf7157c6dd3c7ab6268dfd24a2b8e3054ece968))
+
+
+## v0.6.0 (2025-06-11)
+
+### Features
+
+- Report service and export report endpoint ([#40](https://github.com/ShragaAI/shraga/pull/40),
+  [`c8fe5f7`](https://github.com/ShragaAI/shraga/commit/c8fe5f7e763a456526aa2d4a3fb53a554170a12a))
+
+* feat: report service and export report endpoint
+
+* chore: readme update
+
+* feat: replace get with post, return status 403 if user without permission
+
+
+## v0.5.0 (2025-06-09)
+
+### Chores
+
+- Add auth unit tests
+  ([`44ba8f2`](https://github.com/ShragaAI/shraga/commit/44ba8f2bfa232772a1a6601244444923602cd9f6))
+
+### Features
+
+- Replace chat history endpoint for Analytics with chat dialogs endpoint
+  ([#39](https://github.com/ShragaAI/shraga/pull/39),
+  [`8b9c77d`](https://github.com/ShragaAI/shraga/commit/8b9c77d6528b568cef207e5d07180303fe3c752f))
+
+* feat: replace chat history endpoint for Analytics with chat dialogs endpoint
+
+* fix: move get_chat_dialogs to analytics service
+
+
+## v0.4.0 (2025-06-04)
+
+### Features
+
+- Get auth lifetime from config ([#37](https://github.com/ShragaAI/shraga/pull/37),
+  [`4a5171a`](https://github.com/ShragaAI/shraga/commit/4a5171acc2d11bb41f28053beb95b13c71600353))
+
+* feat: get auth lifetime from config
+
+* fix: code refinements
+
+* fix: change auth lifetime param name
+
+
+## v0.3.0 (2025-06-03)
+
+### Features
+
+- Add user org in chat history ([#38](https://github.com/ShragaAI/shraga/pull/38),
+  [`5077924`](https://github.com/ShragaAI/shraga/commit/50779244e1fcb266d3bc7808e1c7fc2a92e6de2c))
+
+* feat: add user org in chat history
+
+* fix: code refinements
+
+* chore: update a bunch of tests + resolve circular imports
+
+---------
+
+Co-authored-by: Liza Katz <lizka.k@gmail.com>
+
+
 ## v0.2.10 (2025-05-28)
 
 ### Bug Fixes

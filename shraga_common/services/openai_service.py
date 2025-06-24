@@ -5,7 +5,7 @@ from openai import OpenAI, OpenAIError
 
 from shraga_common import ShragaConfig
 
-from ..models import FlowStats
+from shraga_common.models import FlowStats
 from .common import LLMModelResponse
 from .llm_service import LLMService, LLMServiceOptions
 

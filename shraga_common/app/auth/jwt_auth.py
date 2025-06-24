@@ -2,9 +2,10 @@ import binascii
 
 import jwt
 from starlette.authentication import (AuthCredentials, AuthenticationBackend,
-                                     AuthenticationError, SimpleUser)
+                                     AuthenticationError)
 
 from ..config import get_config
+from .user import ShragaUser
 
 
 class JWTAuthBackend(AuthenticationBackend):
@@ -20,11 +21,21 @@ class JWTAuthBackend(AuthenticationBackend):
         try:
             scheme, token = auth.split()
             if scheme.lower() != "bearer":
-                return
-            auth_secret = shraga_config.auth_realms().get("jwt").get("secret")
+                raise AuthenticationError("Invalid scheme")
+            auth_secret = shraga_config.auth_realms().get("jwt", {}).get("secret", "")
             decoded = jwt.decode(token, auth_secret, algorithms=["HS256"])
         except (ValueError, UnicodeDecodeError, binascii.Error, jwt.DecodeError):
             raise AuthenticationError("Invalid JWT token")
 
         username = decoded.get("username") or decoded.get("email") or "anonymous"
-        return AuthCredentials(["authenticated"]), SimpleUser(str(username).strip())
+        metadata = {k: v for k, v in decoded.items() if v is not None}
+
+        user = ShragaUser(
+            username=username,
+            metadata={
+                "auth_type": "jwt",
+                **metadata
+            }
+        )
+        
+        return AuthCredentials(["authenticated"]), user

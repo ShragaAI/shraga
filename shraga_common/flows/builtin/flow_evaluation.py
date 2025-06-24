@@ -15,7 +15,7 @@ from pydantic import ValidationError
 from shraga_common import ShragaConfig
 from shraga_common.flows.builtin.evaluation_model import (EvaluationModel,
                                                           EvaluationScenario)
-from shraga_common.logging import get_config_info, get_platform_info
+from shraga_common.logger import get_config_info, get_platform_info
 from shraga_common.models import FlowBase, FlowResponse, FlowRunRequest
 from shraga_common.prompts import PART_EVALUATION_PROMPT
 from shraga_common.retrievers import get_client
@@ -140,6 +140,10 @@ class EvaluationFlow(FlowBase):
         contains_key_doc_id = self.is_key_doc_id_in_retrieval_results(
             scenario_answer, scenario
         )
+
+        # Calculate Average Precision
+        avg_precision = self.average_precision(scenario_answer, scenario)
+
         missing_doc_id = contains_key_doc_id is None
         no_answer = answer.startswith("I'm sorry")
 
@@ -150,6 +154,7 @@ class EvaluationFlow(FlowBase):
             "evaluation": {
                 "missing_doc_id": missing_doc_id,
                 "contains_key_doc_id": contains_key_doc_id,
+                "average_precision": avg_precision,
                 "no_answer": no_answer,
                 "run_time": run_time.seconds,
             },
@@ -162,6 +167,22 @@ class EvaluationFlow(FlowBase):
                 "exec_stats": [s.dict() for s in scenario_answer.stats],
             },
         }
+    
+    def average_precision(self, scenario_answer, scenario: EvaluationScenario):
+        hits = 0
+        sum_precisions = 0.0
+        retrieved_docs = [doc.title for doc in scenario_answer.retrieval_results]
+        relevant_docs = scenario.metadata.get('document_ids')
+
+        for i, doc_id in enumerate(retrieved_docs):
+            if doc_id in relevant_docs:
+                hits += 1
+                precision_at_i = hits / (i + 1)
+                sum_precisions += precision_at_i
+
+        if hits == 0:
+            return 0.0
+        return sum_precisions / len(relevant_docs)
 
     def get_eval_prompt(
         self, testcase: dict = None, response_answer: str = None, _=None
@@ -188,6 +209,7 @@ class EvaluationFlow(FlowBase):
         found_key_doc_id = 0
         no_key_doc_id = 0
         err_count = 0
+        ap_scores = []
 
         # Lock to safely update counters in parallel
         lock = asyncio.Lock()
@@ -203,6 +225,15 @@ class EvaluationFlow(FlowBase):
             response_answer = result.get("generated_answer", None)
             average_run_time += result.get("evaluation", {}).get("run_time", 0)
             expected_answer = testcase.get("answer", None)
+
+            avg_precision = result["evaluation"].get("average_precision")
+            if avg_precision:
+                ap_scores.append(avg_precision)
+
+            if result["evaluation"].get("contains_key_doc_id"):
+                found_key_doc_id += 1
+            elif result["evaluation"].get("contains_key_doc_id") is None:
+                no_key_doc_id += 1
 
             if expected_answer:
                 prompt = self.get_eval_prompt(testcase, response_answer, preferences)
@@ -240,10 +271,7 @@ class EvaluationFlow(FlowBase):
 
                     if result["evaluation"].get("error"):
                         err_count += 1
-                    if result["evaluation"].get("contains_key_doc_id"):
-                        found_key_doc_id += 1
-                    elif result["evaluation"].get("contains_key_doc_id") is None:
-                        no_key_doc_id += 1
+
                     self.log_eval_result(result, preferences)
             else:
                 self.log_eval_result(result, preferences)
@@ -274,6 +302,7 @@ class EvaluationFlow(FlowBase):
                     partial_correct_count / len(results) * 100
                 ),
                 "average_run_time": average_run_time,
+                "mean_average_precision": round(sum(ap_scores) / len(ap_scores), 3) if ap_scores else 0
             },
             "results": results,
         }

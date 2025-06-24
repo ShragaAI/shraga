@@ -14,7 +14,7 @@ class TestBedrockEmbedder(unittest.IsolatedAsyncioTestCase):
             aws_secret_access_key="test",
         )
         # mock the invoke_model method
-        text = json.dumps({"vector": [0.1, 0.2, 0.3]}).encode("utf-8")
+        text = json.dumps({"embeddings": [[0.1, 0.2, 0.3]]}).encode("utf-8")
         stream_mock = MagicMock()
         stream_mock.read.return_value = text
 
