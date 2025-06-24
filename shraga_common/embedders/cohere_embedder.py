@@ -29,7 +29,7 @@ class CohereEmbedder(BaseEmbedder):
         if cohere_access_key == "":
             cohere_access_key = None
 
-        self.cohere_client = cohere.Client(cohere_access_key)
+        self.cohere_client = cohere.ClientV2(cohere_access_key)
 
     async def generate_vector(
         self, text: str, extra_options: Optional[BaseEmbedderGenerateOptions] = None
@@ -47,11 +47,13 @@ class CohereEmbedder(BaseEmbedder):
                 text = text[: self.MAX_INPUT_SIZE]
 
             task = extra_options.get("task", "search_document")
-            model_name = extra_options.get("embed_model_name", "cohere")
+            model_name = extra_options.get("embed_model_name", "embed-v4.0")
+            output_dimension = extra_options.get("output_dimension", 1536)
             response = self.cohere_client.embed(
                 texts=[text],
-                model="embed-v4.0",
+                model=model_name,
                 input_type=task,
+                output_dimension=output_dimension,
                 embedding_types=["float"],
             )
 
