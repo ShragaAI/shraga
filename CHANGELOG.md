@@ -1,6 +1,32 @@
 # CHANGELOG
 
 
+## v0.7.0 (2025-06-25)
+
+### Chores
+
+- Bump
+  ([`a8e4a64`](https://github.com/ShragaAI/shraga/commit/a8e4a646aaacf0982a0739230b94541002d1e9bc))
+
+- Log execution plan
+  ([`5e502e5`](https://github.com/ShragaAI/shraga/commit/5e502e50eefd2f282945f68326b8d5352f743ca1))
+
+### Features
+
+- Save chat preferences in chat history ([#44](https://github.com/ShragaAI/shraga/pull/44),
+  [`1dca657`](https://github.com/ShragaAI/shraga/commit/1dca657ce742da94e1a1218a351eafc90c5f183a))
+
+* feat: save chat preferences in chat history
+
+* chore: ui.default_flow and ui.list_flows validation before starting the app
+
+* shraga config tests
+
+---------
+
+Co-authored-by: Liza Katz <lizka.k@gmail.com>
+
+
 ## v0.6.2 (2025-06-24)
 
 ### Bug Fixes
