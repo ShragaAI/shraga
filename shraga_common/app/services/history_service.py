@@ -218,6 +218,7 @@ async def log_user_message(request: Request, request_body: FlowRunApiRequest):
             "flow_id": request_body.flow_id,
             "text": request_body.question,
             "position": request_body.position,
+            "preferences": request_body.preferences,
         },
     )
 
@@ -241,6 +242,7 @@ async def log_system_message(
             "flow_id": request_body.flow_id,
             "text": response.response_text,
             "position": request_body.position + 1,
+            "preferences": request_body.preferences,
             "stats": response.stats,
             "payload": response.payload,
             "retrieval_results": response.retrieval_results,

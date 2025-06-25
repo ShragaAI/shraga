@@ -8,3 +8,4 @@ class FlowRunApiRequest(FlowRunRequest):
     chat_id: Optional[str] = None
     position: Optional[int] = None
     msg_id: Optional[str] = None
+    preferences: Optional[dict] = None
