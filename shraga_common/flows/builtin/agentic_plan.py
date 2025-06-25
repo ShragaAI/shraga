@@ -1,4 +1,5 @@
 import json
+import logging
 from abc import abstractmethod
 from datetime import datetime
 from typing import Optional
@@ -92,14 +93,36 @@ class AgenticPlanFlowBase(LLMFlowBase):
             self.trace(f"execute runtime: {run_time}")
             if self.parse_json:
                 payload = json.loads(content.text, strict=False)
-                payload = payload.get("plan", [])
+                plan = payload.get("plan", [])
+                payload = plan
+
+                # Log the execution plan to console
+                print("\n" + "=" * 50)
+                print(f"EXECUTION PLAN FOR: {request.question}")
+                print("=" * 50)
+                if plan:
+                    for idx, step in enumerate(plan):
+                        print(f"Step {idx+1}: {json.dumps(step, indent=2)}")
+                else:
+                    print("No execution plan generated.")
+                print("=" * 50 + "\n")
             else:
                 response_text = content.text
+                # Log the text response
+                print("\n" + "=" * 50)
+                print(f"TEXT RESPONSE FOR: {request.question}")
+                print("=" * 50)
+                print(response_text)
+                print("=" * 50 + "\n")
 
         except (RequestCancelledException, LLMServiceUnavailableException):
             raise
         except Exception as e:
-            payload = {"error": str(e), "body": content if content else ""}
+            error_message = str(e)
+            payload = {"error": error_message, "body": content if content else ""}
+            print("\n" + "=" * 50)
+            print(f"ERROR IN EXECUTION PLAN: {error_message}")
+            print("=" * 50 + "\n")
 
         return FlowResponse(
             response_text=response_text,
