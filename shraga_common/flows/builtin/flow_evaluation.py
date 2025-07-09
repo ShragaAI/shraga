@@ -180,7 +180,7 @@ class EvaluationFlow(FlowBase):
                 precision_at_i = hits / (i + 1)
                 sum_precisions += precision_at_i
 
-        if hits == 0:
+        if hits == 0 or len(relevant_docs) == 0:
             return 0.0
         return sum_precisions / len(relevant_docs)
 
@@ -226,9 +226,7 @@ class EvaluationFlow(FlowBase):
             average_run_time += result.get("evaluation", {}).get("run_time", 0)
             expected_answer = testcase.get("answer", None)
 
-            avg_precision = result["evaluation"].get("average_precision")
-            if avg_precision:
-                ap_scores.append(avg_precision)
+            ap_scores.append(result["evaluation"].get("average_precision"))
 
             if result["evaluation"].get("contains_key_doc_id"):
                 found_key_doc_id += 1
