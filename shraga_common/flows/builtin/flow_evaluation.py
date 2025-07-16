@@ -31,7 +31,8 @@ class EvaluationFlow(FlowBase):
     def __init__(self, config: ShragaConfig, flows: Optional[dict] = None):
         super().__init__(config, flows)
         self.es_client = get_client(config)
-        self.index_name = "max-evaluation"
+        self.index_name = config.get("evaluation.index")
+
         # set the evaluation id to the current date YY-MM-dd + a UUID
         platform_info = get_platform_info()
         ts = datetime.now()
@@ -335,6 +336,9 @@ class EvaluationFlow(FlowBase):
             o["trace"] = result.get("metadata", {}).get("trace", [])
             o["routing"] = result.get("metadata", {}).get("routing", [])
 
+        if not self.index_name:
+            raise ValueError(f"Index '{self.index_name}' is not correctly defined in the config")
+        
         self.es_client.index(index=self.index_name, body=o)
 
     def reached_test_count(self, results: List, preferences: EvaluationModel):

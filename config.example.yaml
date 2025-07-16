@@ -68,3 +68,5 @@ history:
     - bigdataboutique.com
 flows:
   input_max_length: 1000
+evaluation:
+  index: eval-index-name
