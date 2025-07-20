@@ -1,6 +1,27 @@
 # CHANGELOG
 
 
+## v0.7.1 (2025-07-20)
+
+### Bug Fixes
+
+- Improve readme, cleanup history service
+  ([`5baebcb`](https://github.com/ShragaAI/shraga/commit/5baebcbc115e659cce5881f1af5d5a46279b03c2))
+
+### Chores
+
+- Bump
+  ([`c785d32`](https://github.com/ShragaAI/shraga/commit/c785d321a00429bf773c5342eac88801c32b3868))
+
+- Read index name from config ([#47](https://github.com/ShragaAI/shraga/pull/47),
+  [`aadd507`](https://github.com/ShragaAI/shraga/commit/aadd507f39e46b71118117daad866ddfc002ec86))
+
+Co-authored-by: Dinor Nagar <dinornagar@Dinors-MacBook-Air.local>
+
+- Update MAP metric
+  ([`ac725c0`](https://github.com/ShragaAI/shraga/commit/ac725c07353d989ed1e9b02d7a695df2c4a3a835))
+
+
 ## v0.7.0 (2025-06-25)
 
 ### Chores
