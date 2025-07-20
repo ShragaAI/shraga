@@ -45,3 +45,5 @@ history:
     - user@domain.com
     domains:
     - bigdataboutique.com
+evaluation:
+  index: eval-index-name
