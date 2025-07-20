@@ -1,4 +1,4 @@
-## Shraga
+# Shraga
 
 Shraga is a modern AI application with a backend based on FastAPI and a frontend built with React.
 
@@ -34,30 +34,6 @@ To activate the virtual environment:
 poetry shell
 which python  # Verify the correct Python interpreter is being used
 ```
-
-## Development Tools
-
-Several command-line tools are included with this package to help with development and management tasks:
-
-### User Management
-
-```bash
-# Create a user with basic authentication (interactive mode)
-poetry run create-basic-auth-user
-
-# Create a user with command-line arguments
-poetry run create-basic-auth-user <email> <password> <config_file>
-
-# Example
-poetry run create-basic-auth-user user@example.com mypassword123 config.demo.yaml
-```
-This tool will:
-- Prompt you to enter a user email address (with validation)
-- Securely collect and validate a password
-- Ask for the configuration file to update
-- Generate a bcrypt hash of the password
-- Save the credentials to a text file for reference
-- Update the specified configuration file with the new user
 
 ## Running the Application
 
@@ -104,13 +80,30 @@ To run the demo flow without requiring an LLM, Elasticsearch, or Opensearch:
    uvicorn main:app --reload
    ```
 
-## Project Structure
+## Development Tools
 
-- `/shraga_common`: Core library with reusable components
-- `/scripts`: Command-line utilities and helper scripts
-- `/frontend`: React-based web interface
-- `/flows`: Flow definitions for different use cases
-- `/terraform`: Infrastructure as code for deployment
+Several command-line tools are included with this package to help with development and management tasks:
+
+### User Management
+
+```bash
+# Create a user with basic authentication (interactive mode)
+poetry run create-basic-auth-user
+
+# Create a user with command-line arguments
+poetry run create-basic-auth-user <email> <password> <config_file>
+
+# Example
+poetry run create-basic-auth-user user@example.com mypassword123 config.demo.yaml
+```
+
+This tool will:
+- Prompt you to enter a user email address (with validation)
+- Securely collect and validate a password
+- Ask for the configuration file to update
+- Generate a bcrypt hash of the password
+- Save the credentials to a text file for reference
+- Update the specified configuration file with the new user
 
 ### Code Style
 
@@ -120,44 +113,42 @@ This project uses pre-commit hooks to enforce code style. They're installed with
 poetry run pre-commit install
 ```
 
-## Report API
+## API Documentation
 
-For generating chat reports use `/api/report/export` endpoint with params:
+### Authentication
 
-```
-report_type=history
-start="YYYY-MM-DD HH:MM:SS" (Optional)
-end="YYYY-MM-DD HH:MM:SS" (Optional)
-user_id (Optional)
-user_org (Optional)
-```
+To authenticate with the API, you need to obtain an auth token using basic authentication.
 
-The endpoint is available for users with `analytics` permission and `history` has to be enabled in config.yaml.
-Analytics permission can be created in config.yaml:
+#### Getting an Auth Token
 
-```
-history:
-   enabled: true
-   analytics: 
-     domains:
-       - domain.ltd
-```
-
-OR
-
-```
-history:
-   enabled: true
-   analytics: 
-      users:
-         - username_from_auth.users
-```
-
-
-Example:
+To get `YOUR_TOKEN_HERE`, encode your credentials using base64:
 
 ```bash
-curl -X POST "http://localhost:8000/api/report/export" \
+# Replace user@domain.com and your_password with actual credentials
+echo -n "user@domain.com:your_password" | base64
+# This outputs the token to use in the Authorization header
+```
+
+### Flow Run API
+
+To generate a response programmatically, use the flow run endpoint:
+
+```bash
+curl -X POST "http://myhost/api/flows/run" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Basic YOUR_TOKEN_HERE" \
+  -d '{
+    "flow_id": "flow name",
+    "question": "this is my question?"
+  }'
+```
+
+### Report API
+
+For generating chat reports, use the `/api/report/export` endpoint:
+
+```bash
+curl -X POST "http://myhost/api/report/export" \
   -H "Content-Type: application/json" \
   -H "Authorization: Basic YOUR_TOKEN_HERE" \
   -d '{
@@ -165,10 +156,49 @@ curl -X POST "http://localhost:8000/api/report/export" \
     "start": "2025-04-01 00:00:00",
     "end": "2025-06-01 00:00:00",
     "user_id": "user@domain.ltd",
-    "user_org": "company_name",
+    "user_org": "company_name"
   }'
 ```
 
+#### Parameters
+
+- `report_type`: "history" (required)
+- `start`: "YYYY-MM-DD HH:MM:SS" (optional)
+- `end`: "YYYY-MM-DD HH:MM:SS" (optional)
+- `user_id`: string (optional)
+- `user_org`: string (optional)
+
+#### Prerequisites
+
+The endpoint is available for users with `analytics` permission and `history` must be enabled in config.yaml.
+
+Analytics permission can be configured in config.yaml:
+
+**Option 1: Domain-based access**
+```yaml
+history:
+   enabled: true
+   analytics: 
+     domains:
+       - domain.ltd
+```
+
+**Option 2: User-based access**
+```yaml
+history:
+   enabled: true
+   analytics: 
+      users:
+         - username_from_auth.users
+```
+
+## Project Structure
+
+- `/shraga_common`: Core library with reusable components
+- `/scripts`: Command-line utilities and helper scripts
+- `/frontend`: React-based web interface
+- `/flows`: Flow definitions for different use cases
+- `/terraform`: Infrastructure as code for deployment
 
 ## License
 
