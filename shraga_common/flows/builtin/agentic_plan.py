@@ -7,7 +7,7 @@ from typing import Optional
 from shraga_common import ShragaConfig
 from shraga_common import RequestCancelledException, LLMServiceUnavailableException
 from shraga_common.models import FlowResponse, FlowRunRequest
-from shraga_common.services import LLMServiceOptions
+from shraga_common.services.bedrock_service import InvokeConfig
 
 from .llm_flow_base import LLMFlowBase
 
@@ -20,6 +20,10 @@ class AgenticPlanFlowBase(LLMFlowBase):
     def __init__(self, config: ShragaConfig, flows: Optional[dict] = None):
         super().__init__(config, flows)
         self.tool_spec = self.tools_to_spec()
+        self.llm_context = InvokeConfig(
+            model_id=self.llm_model_name,
+            parse_json=self.parse_json,
+        )
 
     def tools_to_spec(self):
         parsed_tool_list = []
@@ -64,10 +68,7 @@ class AgenticPlanFlowBase(LLMFlowBase):
         content = None
         response_text = ""
         payload = {}
-        llm_context: LLMServiceOptions = {}
-        if self.llm_model_name:
-            llm_context["model_id"] = self.llm_model_name
-
+                
         self.init_model()
 
         prompt = self.format_prompt(
@@ -87,11 +88,11 @@ class AgenticPlanFlowBase(LLMFlowBase):
 
         try:
             content = await self.llmservice.invoke_converse_model(
-                system_prompts, prompt, self.tool_spec, llm_context
+                system_prompts, prompt, self.tool_spec, self.llm_context
             )
             run_time = datetime.now() - start_time
             self.trace(f"execute runtime: {run_time}")
-            if self.parse_json:
+            if self.llm_context.parse_json:
                 payload = json.loads(content.text, strict=False)
                 plan = payload.get("plan", [])
                 payload = plan
@@ -118,6 +119,11 @@ class AgenticPlanFlowBase(LLMFlowBase):
         except (RequestCancelledException, LLMServiceUnavailableException):
             raise
         except Exception as e:
+            if not self.llm_context.is_retry:
+                self.llm_context.is_retry = True
+                self.trace(f"Retrying execution due to error: {str(e)}")
+                return await self.execute(request)
+
             error_message = str(e)
             payload = {"error": error_message, "body": content if content else ""}
             print("\n" + "=" * 50)

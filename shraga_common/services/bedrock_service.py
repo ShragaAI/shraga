@@ -11,6 +11,14 @@ from shraga_common.models import FlowStats
 from shraga_common.utils import safe_to_int
 from .common import LLMModelResponse
 from .llm_service import LLMService, LLMServiceOptions
+from pydantic import BaseModel
+
+
+class InvokeConfig(BaseModel):
+    model_id: Optional[str] = None
+    parse_json: Optional[bool] = False
+    is_retry: Optional[bool] = False
+
 
 
 class BedrockChatModelId(TypedDict):
@@ -80,14 +88,14 @@ class BedrockService(LLMService):
         return await self.invoke_chat_model(prompt, options)
 
     async def invoke_converse_model(
-        self, system_prompt: List[str], prompt: str, tool_config: Optional[dict] = {}, options: dict = {}
+        self, system_prompt: List[str], prompt: str, tool_config: Optional[dict] = {}, options: Optional[InvokeConfig] = None
     ):
         if not options:
-            options = {
-                "model_id": "sonnet_3",
-            }
+            options = InvokeConfig(
+                model_id="sonnet_3",
+            )
 
-        model_name: BedrockModelNames = options.get("model_id")
+        model_name: BedrockModelNames = options.model_id
         model_id = BEDROCK_CHAT_MODEL_IDS[model_name]
 
         system_messages = [{"text": msg} for msg in system_prompt]
