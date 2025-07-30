@@ -1,6 +1,26 @@
 # CHANGELOG
 
 
+## v0.8.0 (2025-07-30)
+
+### Features
+
+- Add retry on invoke error ([#48](https://github.com/ShragaAI/shraga/pull/48),
+  [`0960629`](https://github.com/ShragaAI/shraga/commit/0960629b846d95ef960618d13f57b77833ec4db9))
+
+* feat: add retry on invoke error
+
+* chore: encapsulate logic to bedrock service
+
+* chore: add tests
+
+---------
+
+Co-authored-by: Dinor Nagar <dinornagar@Dinors-MacBook-Air.local>
+
+Co-authored-by: Liza Katz <lizka.k@gmail.com>
+
+
 ## v0.7.1 (2025-07-20)
 
 ### Bug Fixes
