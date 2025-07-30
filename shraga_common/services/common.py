@@ -13,9 +13,10 @@ class LLMModelResponse(BaseModel):
 
     def __init__(self, text: str, json: Optional[dict] = None, stats: Optional[FlowStats] = None):
         super().__init__(text=text, json=json, stats=stats)
-        self.text = self.clean_text(text)
+        self.text = LLMModelResponse.clean_text(text)
 
-    def clean_text(self, text: str) -> str:
+    @staticmethod
+    def clean_text(text: str) -> str:
         text = text.replace("```json", "").replace("```", "").strip()
         # clean up any text outside the curly brackets.
         # This means that responses have to be json OBJECTS
