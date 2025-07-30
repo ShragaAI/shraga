@@ -1,6 +1,7 @@
 import asyncio
 import json
 import time
+from json import JSONDecodeError
 from typing import List, Literal, Optional, TypedDict
 
 import boto3
@@ -136,12 +137,19 @@ class BedrockService(LLMService):
 
             text = response["output"]["message"]["content"][0]["text"]
 
-            # Check type correctness
+            parsed_json = None
             if options.parse_json:
                 parsed_json = json.loads(text, strict=False)
 
-            return LLMModelResponse(text=text, stats=stats)
-        
+            return LLMModelResponse(text=text, json=parsed_json, stats=stats)
+
+        except JSONDecodeError:
+            if not options.is_retry:
+                options.is_retry = True
+                return await self.invoke_converse_model(system_prompt, prompt, tool_config, options)
+            else:
+                raise
+            
         except LLMServiceUnavailableException:
             raise
         except (
@@ -153,10 +161,6 @@ class BedrockService(LLMService):
         ) as e:
             raise LLMServiceUnavailableException("Bedrock error", e)
         except Exception as e:
-            if not options.is_retry:
-                options.is_retry = True
-                return await self.invoke_converse_model(system_prompt, prompt, tool_config, options)
-            
             raise Exception(f"Error invoking Bedrock model: {str(e)}")
         
 

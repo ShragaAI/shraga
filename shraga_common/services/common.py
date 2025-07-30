@@ -8,10 +8,11 @@ from shraga_common.models import FlowStats
 
 class LLMModelResponse(BaseModel):
     text: str
+    json: Optional[dict] = None
     stats: Optional[FlowStats] = None
 
-    def __init__(self, text: str, stats: Optional[FlowStats] = None):
-        super().__init__(text=text, stats=stats)
+    def __init__(self, text: str, json: Optional[dict] = None, stats: Optional[FlowStats] = None):
+        super().__init__(text=text, json=json, stats=stats)
         self.text = self.clean_text(text)
 
     def clean_text(self, text: str) -> str:

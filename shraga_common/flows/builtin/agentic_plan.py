@@ -93,7 +93,7 @@ class AgenticPlanFlowBase(LLMFlowBase):
             run_time = datetime.now() - start_time
             self.trace(f"execute runtime: {run_time}")
             if self.llm_context.parse_json:
-                payload = json.loads(content.text, strict=False)
+                payload = content.json
                 plan = payload.get("plan", [])
                 payload = plan
 
