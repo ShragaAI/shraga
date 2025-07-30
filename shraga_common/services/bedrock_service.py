@@ -136,6 +136,10 @@ class BedrockService(LLMService):
 
             text = response["output"]["message"]["content"][0]["text"]
 
+            # Check type correctness
+            if options.parse_json:
+                parsed_json = json.loads(text, strict=False)
+
             return LLMModelResponse(text=text, stats=stats)
         
         except LLMServiceUnavailableException:
@@ -149,6 +153,10 @@ class BedrockService(LLMService):
         ) as e:
             raise LLMServiceUnavailableException("Bedrock error", e)
         except Exception as e:
+            if not options.is_retry:
+                options.is_retry = True
+                return await self.invoke_converse_model(system_prompt, prompt, tool_config, options)
+            
             raise Exception(f"Error invoking Bedrock model: {str(e)}")
         
 

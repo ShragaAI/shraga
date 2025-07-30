@@ -119,11 +119,6 @@ class AgenticPlanFlowBase(LLMFlowBase):
         except (RequestCancelledException, LLMServiceUnavailableException):
             raise
         except Exception as e:
-            if not self.llm_context.is_retry:
-                self.llm_context.is_retry = True
-                self.trace(f"Retrying execution due to error: {str(e)}")
-                return await self.execute(request)
-
             error_message = str(e)
             payload = {"error": error_message, "body": content if content else ""}
             print("\n" + "=" * 50)
