@@ -135,7 +135,7 @@ class BedrockService(LLMService):
                 total_tokens=response['usage']['totalTokens'],
             )
 
-            text = response["output"]["message"]["content"][0]["text"]
+            text = LLMModelResponse.clean_text(response["output"]["message"]["content"][0]["text"])
 
             parsed_json = None
             if options.parse_json:
