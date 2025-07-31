@@ -1,6 +1,16 @@
 # CHANGELOG
 
 
+## v0.8.1 (2025-07-31)
+
+### Bug Fixes
+
+- Convert function to static ([#49](https://github.com/ShragaAI/shraga/pull/49),
+  [`1aa869d`](https://github.com/ShragaAI/shraga/commit/1aa869d11e63ef7ccc2f28892727d519764e9511))
+
+Co-authored-by: Dinor Nagar <dinornagar@Dinors-MacBook-Air.local>
+
+
 ## v0.8.0 (2025-07-30)
 
 ### Features
