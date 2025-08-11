@@ -1,6 +1,19 @@
 # CHANGELOG
 
 
+## v0.8.2 (2025-08-11)
+
+### Bug Fixes
+
+- Define chat_id in run flow
+  ([`98653e2`](https://github.com/ShragaAI/shraga/commit/98653e267b5971d1033aee49cbd98c41f91a3c21))
+
+### Chores
+
+- Use different model in fallback
+  ([`0a4cd16`](https://github.com/ShragaAI/shraga/commit/0a4cd166f3a0be91a2e762a0744fbe9150ecf671))
+
+
 ## v0.8.1 (2025-07-31)
 
 ### Bug Fixes
