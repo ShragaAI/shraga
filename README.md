@@ -117,9 +117,13 @@ poetry run pre-commit install
 
 ### Authentication
 
-To authenticate with the API, you need to obtain an auth token using basic authentication.
+Shraga supports two authentication methods: Basic Authentication and JWT Authentication.
 
-#### Getting an Auth Token
+#### Basic Authentication
+
+To authenticate with the API using basic authentication, you need to encode your credentials using base64.
+
+##### Getting a Basic Auth Token
 
 To get `YOUR_TOKEN_HERE`, encode your credentials using base64:
 
@@ -129,14 +133,65 @@ echo -n "user@domain.com:your_password" | base64
 # This outputs the token to use in the Authorization header
 ```
 
+#### JWT Authentication
+
+JWT (JSON Web Token) authentication allows for more secure and scalable authentication, especially useful when integrating Shraga with your own applications.
+
+##### 1. Configure JWT Secret in config.yaml
+
+First, add a JWT secret to your configuration file:
+
+```yaml
+auth:
+  jwt:
+    secret: "your-super-secret-jwt-key-here"  # Use a strong, randomly generated secret
+```
+
+**Important**: Use a strong, randomly generated secret in production. Never commit secrets to version control.
+
+##### 2. Getting a JWT Token
+
+To obtain a JWT token, you'll need to implement a login endpoint in your application that verifies user credentials and returns a signed JWT. Here's an example using PyJWT:
+
+```python
+import jwt
+import time
+from typing import Dict, Any
+
+def create_jwt_token(user_email: str, user_id: int, user_name: str, secret: str) -> str:
+    now = int(time.time())
+    payload: Dict[str, Any] = {
+        "sub": user_email,        # Subject (user identifier)
+        "uid": user_id,           # User ID
+        "name": user_name,        # User name
+        "iat": now,               # Issued at
+        "exp": now + 86400,       # Expires in 24 hours
+    }
+    return jwt.encode(payload, secret, algorithm="HS256")
+```
+
 ### Flow Run API
 
-To generate a response programmatically, use the flow run endpoint:
+To generate a response programmatically, use the flow run endpoint. You can authenticate using either Basic or JWT authentication:
+
+#### Using Basic Authentication
 
 ```bash
 curl -X POST "http://myhost/api/flows/run" \
   -H "Content-Type: application/json" \
-  -H "Authorization: Basic YOUR_TOKEN_HERE" \
+  -H "Authorization: Basic YOUR_BASIC_TOKEN_HERE" \
+  -d '{
+    "flow_id": "flow name",
+    "question": "this is my question?"
+  }'
+```
+
+#### Using JWT Authentication
+
+```bash
+curl -X POST "http://myhost/api/flows/run" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN_HERE" \
   -d '{
     "flow_id": "flow name",
     "question": "this is my question?"

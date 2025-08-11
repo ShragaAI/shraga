@@ -1,5 +1,6 @@
 import logging
 import traceback
+from datetime import datetime
 from nanoid import generate as nanoid
 
 from fastapi import APIRouter, BackgroundTasks, HTTPException, Request
@@ -48,6 +49,9 @@ async def run_flow(
 
     req_body.question = clean_input(req_body.question)
     req_body.msg_id = nanoid(size=12)
+    
+    if not req_body.chat_id:
+        req_body.chat_id = f"chat_{datetime.now().strftime('%Y%m%d%H%M%S')}"
     
     available_flows = list_flows_service.get_available_flows()
 
