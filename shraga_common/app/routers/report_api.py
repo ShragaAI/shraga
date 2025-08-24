@@ -14,8 +14,7 @@ async def generate_report(request: ReportRequest) -> JSONResponse:
             request.report_type,
             request.start,
             request.end,
-            request.user_id,
-            request.user_org
+            request.filters
         )
         
         return JSONResponse(
