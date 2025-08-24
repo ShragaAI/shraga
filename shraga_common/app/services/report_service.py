@@ -12,8 +12,7 @@ logger = logging.getLogger(__name__)
 async def generate_history_report(
     start: Optional[str] = None,
     end: Optional[str] = None,
-    user_id: Optional[str] = None,
-    user_org: Optional[str] = None,
+    filters: Optional[dict] = None,
     limit: int = 10000
 ) -> List[Dict[str, Any]]:
     try:
@@ -22,13 +21,10 @@ async def generate_history_report(
         if not client:
             return []
 
-        filters = []
-        
-        if user_id:
-            filters.append({"term": {"user_id": user_id}})
-            
-        if user_org:
-            filters.append({"term": {"user_org": user_org}})
+        filters_arr = []
+
+        for key, value in (filters or {}).items():
+            filters_arr.append({"term": {f"user_metadata.{key}.keyword": value}})
             
         time_filter = {
             "range": {
@@ -38,14 +34,14 @@ async def generate_history_report(
                 }
             }
         }
-        filters.append(time_filter)
+        filters_arr.append(time_filter)
 
         if is_prod_env():
-            filters.append({"term": {"config.prod": True}})
+            filters_arr.append({"term": {"config.prod": True}})
 
         bool_query = {
             "must": [{"terms": {"msg_type": ["system", "user", "flow_stats"]}}],
-            "filter": filters,
+            "filter": filters_arr,
         }
 
         query = {
@@ -158,14 +154,13 @@ async def generate_report(
     report_type: str,
     start: Optional[str] = None,
     end: Optional[str] = None,
-    user_id: Optional[str] = None,
-    user_org: Optional[str] = None
+    filters: Optional[dict] = None
 ) -> List[Dict[str, Any]]:
     is_valid, start_iso, end_iso = validate_time_range(start, end)
     if not is_valid:
         raise ValueError("Time range cannot exceed 3 months or has invalid format")
         
     if report_type == "history":
-        return await generate_history_report(start_iso, end_iso, user_id, user_org)
+        return await generate_history_report(start_iso, end_iso, filters)
     else:
         raise ValueError(f"Unsupported report type: {report_type}")

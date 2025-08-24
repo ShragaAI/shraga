@@ -200,18 +200,22 @@ curl -X POST "http://myhost/api/flows/run" \
 
 ### Report API
 
+The Report API allows any user with analytics privileges to retrieve chat conversations from all organizations.
+
 For generating chat reports, use the `/api/report/export` endpoint:
 
 ```bash
-curl -X POST "http://myhost/api/report/export" \
+curl -X POST "http://localhost:5000/api/report/export" \
   -H "Content-Type: application/json" \
   -H "Authorization: Basic YOUR_TOKEN_HERE" \
   -d '{
     "report_type": "history",
     "start": "2025-04-01 00:00:00",
     "end": "2025-06-01 00:00:00",
-    "user_id": "user@domain.ltd",
-    "user_org": "company_name"
+    "filters": { 
+        "company_id": "1111",
+        "email": "test@test.com"
+    }
   }'
 ```
 
