@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.8.3 (2025-08-24)
+
+### Bug Fixes
+
+- Support report filters ([#51](https://github.com/ShragaAI/shraga/pull/51),
+  [`93847c0`](https://github.com/ShragaAI/shraga/commit/93847c0891393f92e0d47b2b57f2ea5f108e716e))
+
+
 ## v0.8.2 (2025-08-11)
 
 ### Bug Fixes
