@@ -14,7 +14,7 @@ from .llm_flow_base import LLMFlowBase
 
 class AgenticPlanFlowBase(LLMFlowBase):
     llm_model_provider = "cohere"
-    llm_model_name = "sonnet_3_5_v2"
+    llm_model_name = "sonnet_3_7"
     available_tools = []
 
     def __init__(self, config: ShragaConfig, flows: Optional[dict] = None):

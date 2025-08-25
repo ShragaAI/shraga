@@ -237,7 +237,7 @@ class EvaluationFlow(FlowBase):
             if expected_answer:
                 prompt = self.get_eval_prompt(testcase, response_answer, preferences)
                 eval_resp = await self.llmservice.invoke_model(
-                    prompt, {"model_id": "sonnet_3_5_v2"}
+                    prompt, {"model_id": "sonnet_3_7"}
                 )
 
                 if not eval_resp:
