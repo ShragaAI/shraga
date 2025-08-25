@@ -68,6 +68,7 @@ class BedrockService(LLMService):
                 "aws.secret_access_key"
             )
             profile_name = profile_name or shraga_config.get("aws.profile")
+            region_name = shraga_config.get("aws.region") or region_name
         if aws_access_key_id == "":
             aws_access_key_id = None
         if aws_secret_access_key == "":
@@ -150,7 +151,7 @@ class BedrockService(LLMService):
         except JSONDecodeError:
             if not options.is_retry:
                 options.is_retry = True
-                options.model_id = "sonnet_3_5_v2_us"
+                options.model_id = "sonnet_3"
                 return await self.invoke_converse_model(system_prompt, prompt, tool_config, options)
             else:
                 raise
