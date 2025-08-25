@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.8.4 (2025-08-25)
+
+### Bug Fixes
+
+- Bump
+  ([`d5b0672`](https://github.com/ShragaAI/shraga/commit/d5b06729667b5081a0e1492c9b78a27c39d06aca))
+
+
 ## v0.8.3 (2025-08-24)
 
 ### Bug Fixes
