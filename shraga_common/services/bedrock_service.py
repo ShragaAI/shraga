@@ -25,10 +25,13 @@ class InvokeConfig(BaseModel):
 class BedrockChatModelId(TypedDict):
     cohere_command: str
     haiku: str
-    haiku_3_5: str
+    haiku_3_5_us: str
     sonnet_3: str
     sonnet_3_5: str
     sonnet_3_5_v2: str
+    sonnet_3_7: str
+    sonnet_4_eu: str
+    nova_pro: str
 
 
 BedrockModelNames = Literal[tuple(BedrockChatModelId.__annotations__.keys())]
@@ -38,11 +41,12 @@ BEDROCK_CHAT_MODEL_IDS: BedrockChatModelId = {
     "haiku": "anthropic.claude-3-haiku-20240307-v1:0",
     "sonnet_3": "anthropic.claude-3-sonnet-20240229-v1:0",
     "sonnet_3_5": "anthropic.claude-3-5-sonnet-20240620-v1:0",
-    # cross region routing
-    "haiku_3_5": "us.anthropic.claude-3-5-haiku-20241022-v1:0",
-    "sonnet_3_5_v2": "us.anthropic.claude-3-5-sonnet-20241022-v2:0",
-    "sonnet_3_7": "us.anthropic.claude-3-7-sonnet-20250219-v1:0",
+    "sonnet_3_7": "anthropic.claude-3-7-sonnet-20250219-v1:0",
     "nova_pro": "amazon.nova-pro-v1:0",
+    # cross region routing
+    "haiku_3_5_us": "us.anthropic.claude-3-5-haiku-20241022-v1:0",
+    "sonnet_3_5_v2_us": "us.anthropic.claude-3-5-sonnet-20241022-v2:0",
+    "sonnet_4_eu": "eu.anthropic.claude-sonnet-4-20250514-v1:0"
 }
 
 
