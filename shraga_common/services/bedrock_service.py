@@ -28,7 +28,7 @@ class BedrockChatModelId(TypedDict):
     haiku_3_5_us: str
     sonnet_3: str
     sonnet_3_5: str
-    sonnet_3_5_v2: str
+    sonnet_3_5_v2_us: str
     sonnet_3_7: str
     sonnet_4_eu: str
     nova_pro: str
@@ -150,7 +150,7 @@ class BedrockService(LLMService):
         except JSONDecodeError:
             if not options.is_retry:
                 options.is_retry = True
-                options.model_id="sonnet_3_5_v2"
+                options.model_id = "sonnet_3_5_v2_us"
                 return await self.invoke_converse_model(system_prompt, prompt, tool_config, options)
             else:
                 raise
