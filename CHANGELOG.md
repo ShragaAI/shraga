@@ -1,6 +1,19 @@
 # CHANGELOG
 
 
+## v0.8.5 (2025-08-26)
+
+### Bug Fixes
+
+- Bump
+  ([`27b9259`](https://github.com/ShragaAI/shraga/commit/27b9259dbcb4381c2c4a8c5908c988031e5b282c))
+
+### Chores
+
+- Add region call and update fallback model
+  ([`d0962da`](https://github.com/ShragaAI/shraga/commit/d0962da283145aacc11af6e857922e0135a2cd06))
+
+
 ## v0.8.4 (2025-08-25)
 
 ### Bug Fixes
