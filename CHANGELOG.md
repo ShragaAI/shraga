@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.8.7 (2025-08-26)
+
+### Bug Fixes
+
+- Dont use sonnet_3
+  ([`be0dabc`](https://github.com/ShragaAI/shraga/commit/be0dabc99dc0b3e34642920738972093545abeb9))
+
+
 ## v0.8.6 (2025-08-26)
 
 ### Bug Fixes
