@@ -1,6 +1,17 @@
 # CHANGELOG
 
 
+## v0.8.8 (2025-11-17)
+
+### Bug Fixes
+
+- Bump ([#54](https://github.com/ShragaAI/shraga/pull/54),
+  [`435b3b7`](https://github.com/ShragaAI/shraga/commit/435b3b7c5e95b028b60d466980717cb7c63bd45d))
+
+- Jwt metadata
+  ([`d14dbb8`](https://github.com/ShragaAI/shraga/commit/d14dbb83cf4f4dff5123e3963e877bfd25a48fa8))
+
+
 ## v0.8.7 (2025-08-26)
 
 ### Bug Fixes
