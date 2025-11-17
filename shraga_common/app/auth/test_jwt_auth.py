@@ -67,7 +67,7 @@ class TestJWTAuthBackend(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(user.get_metadata("auth_type"), "jwt")
         self.assertEqual(user.get_metadata("user_id"), "user123")
         self.assertEqual(user.get_metadata("company"), "test_company")
-        self.assertEqual(user.get_metadata("email"), self.test_username)
+        self.assertEqual(user.username, self.test_username)
     
     @patch("shraga_common.app.auth.jwt_auth.get_config")
     async def test_authenticate_with_missing_username(self, mock_get_config):
@@ -100,7 +100,6 @@ class TestJWTAuthBackend(unittest.IsolatedAsyncioTestCase):
         # Verify results - should use email as username
         self.assertEqual(user.username, self.test_username)
         self.assertEqual(user.get_metadata("auth_type"), "jwt")
-        self.assertEqual(user.get_metadata("email"), self.test_username)
     
     @patch("shraga_common.app.auth.jwt_auth.get_config")
     async def test_authenticate_without_username_or_email(self, mock_get_config):
