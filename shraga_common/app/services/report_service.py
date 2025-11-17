@@ -1,6 +1,6 @@
 import datetime
 import logging
-from typing import List, Optional, Dict, Any, Tuple
+from typing import List, Optional, Dict, Any, Tuple, Union
 from pydash import _
 
 from shraga_common.utils import is_prod_env
@@ -9,10 +9,11 @@ from .get_history_client import get_history_client
 
 logger = logging.getLogger(__name__)
 
+
 async def generate_history_report(
     start: Optional[str] = None,
     end: Optional[str] = None,
-    filters: Optional[dict] = None,
+    filters: Optional[Dict[str, Union[str, int]]] = None,
     limit: int = 10000
 ) -> List[Dict[str, Any]]:
     try:
@@ -23,8 +24,18 @@ async def generate_history_report(
 
         filters_arr = []
 
+        # NOTE: filter by user metadata!
         for key, value in (filters or {}).items():
-            filters_arr.append({"term": {f"user_metadata.{key}.keyword": value}})
+            # Handle both numeric and keyword fields with OR logic
+            filters_arr.append({
+                "bool": {
+                    "should": [
+                        {"term": {f"user_metadata.{key}.keyword": value}},
+                        {"term": {f"user_metadata.{key}": value}}
+                    ],
+                    "minimum_should_match": 1
+                }
+            })
             
         time_filter = {
             "range": {
@@ -106,15 +117,17 @@ async def generate_history_report(
                 output_tokens = int(bucket.get("total_output_tokens", {}).get("value", 0))
                 
                 dialog = {
-                    "user_org": user_message.get("user_org"),
-                    "user_id": user_message.get("user_id"),
                     "timestamp": user_message.get("timestamp"),
                     "msg_id": user_message.get("msg_id"),
                     "question": user_message.get("text", ""),
                     "answer": system_message.get("text", "") if system_message else "",
                     "input_tokens": input_tokens,
-                    "output_tokens": output_tokens
+                    "output_tokens": output_tokens,
+                    "metadata": user_message.get("user_metadata", {}),
+                    "user_org": user_message.get("user_org"),
+                    "user_id": user_message.get("user_id"),
                 }
+                
                 dialogs.append(dialog)
         
         return dialogs
@@ -154,7 +167,7 @@ async def generate_report(
     report_type: str,
     start: Optional[str] = None,
     end: Optional[str] = None,
-    filters: Optional[dict] = None
+    filters: Optional[Dict[str, Union[str, int]]] = None
 ) -> List[Dict[str, Any]]:
     is_valid, start_iso, end_iso = validate_time_range(start, end)
     if not is_valid:

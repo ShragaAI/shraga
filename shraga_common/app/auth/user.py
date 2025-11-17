@@ -23,6 +23,7 @@ class ShragaUser(SimpleUser):
         self.user_org = extract_user_org(self.username)
         self.roles = roles or []
         self.metadata = metadata or {}
+        self.metadata["user_org"] = self.user_org
     
     @property
     def identity(self) -> str:

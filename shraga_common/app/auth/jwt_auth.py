@@ -24,11 +24,24 @@ class JWTAuthBackend(AuthenticationBackend):
                 raise AuthenticationError("Invalid scheme")
             auth_secret = shraga_config.auth_realms().get("jwt", {}).get("secret", "")
             decoded = jwt.decode(token, auth_secret, algorithms=["HS256"])
-        except (ValueError, UnicodeDecodeError, binascii.Error, jwt.DecodeError):
+        except (ValueError, UnicodeDecodeError, binascii.Error, jwt.DecodeError) as e:
+            print(f"JWT decoding error: {e}")
             raise AuthenticationError("Invalid JWT token")
 
         username = decoded.get("username") or decoded.get("email") or "anonymous"
-        metadata = {k: v for k, v in decoded.items() if v is not None}
+        
+        # allow adding string \ numeric custom meta keys.
+        # length is limited to 100 for strings.
+        # max 10 metadata items to prevent excessive data storage.
+        # These values are saved in user_metadata for reports etc.
+        metadata = dict(list({
+            k: v
+            for k, v in decoded.items()
+            if v is not None
+            and not isinstance(v, bool)  # Exclude booleans (bool is subclass of int in Python)
+            and isinstance(v, (str, int))
+            and (not isinstance(v, str) or len(v) <= 100)
+        }.items())[:10])
 
         user = ShragaUser(
             username=username,
