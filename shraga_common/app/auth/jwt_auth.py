@@ -29,22 +29,28 @@ class JWTAuthBackend(AuthenticationBackend):
             raise AuthenticationError("Invalid JWT token")
 
         username = decoded.get("username") or decoded.get("email") or "anonymous"
+        roles = decoded.get("roles", [])
+        
+        other_keys = set(decoded.keys()) - {"username", "email", "roles"}
+        
         
         # allow adding string \ numeric custom meta keys.
         # length is limited to 100 for strings.
         # max 10 metadata items to prevent excessive data storage.
         # These values are saved in user_metadata for reports etc.
-        metadata = dict(list({
-            k: v
-            for k, v in decoded.items()
-            if v is not None
-            and not isinstance(v, bool)  # Exclude booleans (bool is subclass of int in Python)
-            and isinstance(v, (str, int))
-            and (not isinstance(v, str) or len(v) <= 100)
-        }.items())[:10])
+        metadata = {}
+        for key in list(other_keys)[:10]:
+            value = decoded[key]
+            if not (isinstance(value, (str, int)) and (not isinstance(value, bool))):
+                continue
+            if isinstance(value, str) and len(value) > 100:
+                continue
+            metadata[key] = value
+            
 
         user = ShragaUser(
             username=username,
+            roles=roles,
             metadata={
                 "auth_type": "jwt",
                 **metadata

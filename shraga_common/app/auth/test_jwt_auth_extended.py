@@ -110,11 +110,11 @@ class TestJWTAuthBackendExtended(unittest.IsolatedAsyncioTestCase):
         self.assertIsInstance(user, ShragaUser)
         
         # Verify roles are correctly in metadata
-        self.assertEqual(user.get_metadata("roles"), ["admin", "user", "moderator"])
+        self.assertEqual(user.roles, ["admin", "user", "moderator"])
         
         # Verify other metadata
         self.assertEqual(user.get_metadata("auth_type"), "jwt")
-        self.assertEqual(user.get_metadata("email"), self.test_username)
+        self.assertEqual(user.username, self.test_username)
 
     @patch("shraga_common.app.auth.jwt_auth.get_config")
     async def test_authenticate_with_null_values(self, mock_get_config):
