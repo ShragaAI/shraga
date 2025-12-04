@@ -40,11 +40,6 @@ variable "alb_tg_arn" {
   description = "ARN of the target group"
   type        = string
   default     = null
-
-  validation {
-    condition     = (var.alb_tg_arn != null && var.alb_sg_id != null) || (var.alb_subnets_ids != null && var.alb_cert_domain != null)
-    error_message = "ALB target group ARN and security group ID are required when `var.alb_subnets_ids` or `var.alb_cert_domain` are not set"
-  }
 }
 
 variable "alb_sg_id" {
