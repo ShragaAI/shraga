@@ -7,6 +7,7 @@ class ChunkOptions(TypedDict):
     trail: Optional[str]
 
 
+
 class BasicChunker:
 
     def __init__(
