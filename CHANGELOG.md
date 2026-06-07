@@ -1,6 +1,16 @@
 # CHANGELOG
 
 
+## v0.9.0 (2026-06-07)
+
+### Features
+
+- Release v0.9.0
+  ([`6771c74`](https://github.com/ShragaAI/shraga/commit/6771c744dd36e26fd4f0d1dc5668cec55877d638))
+
+Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+
+
 ## v0.8.8 (2025-11-17)
 
 ### Bug Fixes
