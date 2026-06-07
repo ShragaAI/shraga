@@ -1,6 +1,6 @@
 # Shraga
 
-Shraga is a modern AI application with a backend based on FastAPI and a frontend built with React, built by [BigData Boutique](https://bigdataboutique.com/).
+Shraga is a modern AI application with a backend based on FastAPI and a frontend built with React, built by [BigData Boutique](https://bigdataboutique.com/) and used by [Pulse](https://pulse.support/).
 
 ## Installation and Setup
 
